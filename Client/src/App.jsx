@@ -9,7 +9,11 @@ import AdminProducts from "./Pages/admin/products";
 import AdminOrders from "./Pages/admin/orders";
 import AdminFeatures from "./Pages/admin/features";
 import ShoppingLayout from "./Pages/shopping/layout";
+import ShoppingHome from "./components/shopping-view/home";
 import NotFound from "./Pages/not-found";
+import ShoppingListing from "./components/shopping-view/listing";
+import ShoppingCheckout from "./components/shopping-view/checkout";
+import ShoppingAccount from "./components/shopping-view/account";
 
 export default function App() {
   return (
@@ -27,7 +31,13 @@ export default function App() {
           <Route path="features" element={<AdminFeatures />} />
         </Route>
 
-        <Route path="/shop" element={<ShoppingLayout />}></Route>
+        <Route path="/shop" element={<ShoppingLayout />}>
+          <Route path="account" element={<ShoppingAccount />} />
+          <Route path="checkout" element={<ShoppingCheckout />} />
+          <Route path="listings" element={<ShoppingListing />} />
+          <Route path="home" element={<ShoppingHome />} />
+        </Route>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
