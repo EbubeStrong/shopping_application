@@ -3,7 +3,7 @@
  
 
 const AuthRegister = () => {
-  return <div className="">Login Page</div>;
+  return <div className="">Register Page</div>;
 };
 
 export default AuthRegister;
