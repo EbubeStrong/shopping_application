@@ -15,16 +15,17 @@ import ShoppingListing from "./components/shopping-view/listing";
 import ShoppingCheckout from "./components/shopping-view/checkout";
 import ShoppingAccount from "./components/shopping-view/account";
 import CheckAuth from "./components/common/check-auth";
+import UnAuthPage from "./Pages/unauthPage";
 
 export default function App() {
-  // const isAuthenticated = false
-  // const user = null
+  const isAuthenticated = false
+  const user = null
 
-  const isAuthenticated = true;
-  const user = {
-    name : 'Samuel',
-    role : 'admin'
-  }
+  // const isAuthenticated = true;
+  // const user = {
+  //   name : 'Samuel',
+  //   role : 'user'
+  // }
 
 
   return (
@@ -68,6 +69,8 @@ export default function App() {
           <Route path="listings" element={<ShoppingListing />} />
           <Route path="home" element={<ShoppingHome />} />
         </Route>
+
+        <Route path="/unauth-page" element={<UnAuthPage/>} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

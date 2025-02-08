@@ -30,7 +30,7 @@ function CheckAuth({ isAuthenticated, user, children }) {
     user?.role !== "admin" &&
     location.pathname.startsWith("/admin")
   ) {
-    return <Navigate to="/unauthorized" />;
+    return <Navigate to="/unauth-page" />;
   }
 
   // Prevent admins from accessing shopping pages
