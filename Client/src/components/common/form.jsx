@@ -1,10 +1,19 @@
-import { SelectItem, SelectTrigger } from "@radix-ui/react-select";
+import { SelectContent } from "@radix-ui/react-select";
 import { Input } from "../ui/input";
-import { Select, SelectContent, SelectValue } from "../ui/select";
+import { Select, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 
-function CommonForm({ formControls }) {
+function CommonForm({
+  formControls,
+  formData,
+  setFormData,
+  onSubmit,
+  buttonText,
+}) {
   const renderInputsByComponentType = (getControlItem) => {
     let element = null;
+    const value = formData[getControlItem.name] || "";
 
     switch (getControlItem.componentType) {
       case "input":
@@ -14,24 +23,34 @@ function CommonForm({ formControls }) {
             type={getControlItem.type}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
+            value={value}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                [getControlItem.name]: e.target.value,
+              });
+            }}
           />
         );
         break;
 
       case "textarea":
         element = (
-          <Input
+          <Textarea
             name={getControlItem.name}
-            type={getControlItem.type}
+            // type={getControlItem.type}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
+            value={value}
           />
         );
         break;
 
       case "select":
         element = (
-          <Select>
+          <Select onValueChange={(value) => setFormData({
+            ...formData, [getControlItem.name]: value
+          })} value={value}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder={getControlItem.placeholder} />
             </SelectTrigger>
@@ -40,7 +59,7 @@ function CommonForm({ formControls }) {
               {getControlItem.options &&
                 getControlItem.options.length > 0 &&
                 getControlItem.options.map((optionItem) =>
-                  optionItem ? ( 
+                  optionItem ? (
                     <SelectItem key={optionItem.id} value={optionItem.id}>
                       {optionItem.label}
                     </SelectItem>
@@ -53,7 +72,7 @@ function CommonForm({ formControls }) {
 
       default:
         element = (
-          <Input
+          <Textarea
             name={getControlItem.name}
             type={getControlItem.type}
             placeholder={getControlItem.placeholder}
@@ -65,15 +84,19 @@ function CommonForm({ formControls }) {
     return element;
   };
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <div className="flex flex-col gap-3">
         {formControls.map((controlItem) => (
           <div className="grid w-full gap-1 5" key={controlItem.name}>
-            <label htmlFor="userName">controlItem.label</label>
+            <label htmlFor="userName">{controlItem.label}</label>
             {renderInputsByComponentType(controlItem)}
           </div>
         ))}
       </div>
+      
+      <Button type="submit" className="mt-2 w-full">
+        {buttonText || "Submit"}
+      </Button>
     </form>
   );
 }
