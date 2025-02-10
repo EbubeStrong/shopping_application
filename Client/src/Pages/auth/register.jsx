@@ -9,12 +9,13 @@ const initialState = {
   password: '',
 }
 
-function onSubmit() {
-  
-}
 
 const AuthRegister = () => {
   const [formData, setFormData] = useState(initialState);
+  
+  function onSubmit() {
+  }
+
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="text-center">
