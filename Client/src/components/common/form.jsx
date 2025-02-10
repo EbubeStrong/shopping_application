@@ -74,7 +74,7 @@ function CommonForm({
         element = (
           <Textarea
             name={getControlItem.name}
-            type={getControlItem.type}
+            // type={getControlItem.type}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
           />
