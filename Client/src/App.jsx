@@ -16,10 +16,15 @@ import ShoppingCheckout from "./components/shopping-view/checkout";
 import ShoppingAccount from "./components/shopping-view/account";
 import CheckAuth from "./components/common/check-auth";
 import UnAuthPage from "./Pages/unauthPage";
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react";
+import { checkAuth } from "../store/auth-slice/index";
+import { Skeleton } from "@/components/ui/skeleton";
+
 
 export default function App() {
-  const isAuthenticated = false
-  const user = null
+  // const isAuthenticated = false
+  // const user = null
 
   // const isAuthenticated = true;
   // const user = {
@@ -27,6 +32,33 @@ export default function App() {
   //   role : 'user'
   // }
 
+  const { user, isAuthenticated, isLoading } = useSelector(state => state.auth)
+  
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(checkAuth())
+  }, [dispatch])
+
+  if (isLoading) return (
+    // <Skeleton className="w-[100px] h-[20px] rounded-full" />;
+    <div className="flex justify-center items-center h-screen">
+      {/* <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div> */}
+
+      <div className="flex flex-col space-y-3">
+        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
