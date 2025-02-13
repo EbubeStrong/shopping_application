@@ -59,11 +59,11 @@ function AdminSideBar({ open, setOpen }) {
   return (
       <>
           {/* I HAVE NOT YET INSTALLED THIS SHEET */}
-      <Sheet open={open} onOpenChange={setOpen} side="left">
-        <SheetContent>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="left" className="w-64" >
           <div className="flex flex-col h-full">
-            <SheetHeader>
-              <SheetTitle className="flex gap-2 mt-6 mb-4">
+            <SheetHeader className='border-b'>
+              <SheetTitle className="flex gap-2 mt-5 mb-5">
                 <ChartNoAxesCombined size={30} />
                 Admin Panel
               </SheetTitle>
