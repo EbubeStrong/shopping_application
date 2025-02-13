@@ -29,7 +29,7 @@ export default function App() {
   // const isAuthenticated = true;
   // const user = {
   //   name : 'Samuel',
-  //   role : 'user'
+  //   role : 'admin'
   // }
 
   const { user, isAuthenticated, isLoading } = useSelector(state => state.auth)
@@ -80,7 +80,7 @@ export default function App() {
           element={
             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
               <AdminLayout />
-            </CheckAuth>
+             </CheckAuth>
           }
         >
           <Route path="dashboard" element={<AdminDashboard />} />

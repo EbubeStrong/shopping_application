@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  // isAuthenticated: false,
-  isAuthenticated: true,
+  isAuthenticated: false,
+  // isAuthenticated: true,
   isLoading: false,
   user: null,
 };
@@ -23,6 +23,7 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+// Login
 export const loginUser = createAsyncThunk(
   "/auth/login",
 
@@ -38,7 +39,24 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// LogOut
+export const logoutUser = createAsyncThunk(
+  "/auth/logout",
 
+  async (formData) => {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/logout",
+      formData,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  }
+);
+
+
+// CheckAuth
 export const checkAuth = createAsyncThunk(
   "/auth/checkauth",
 
@@ -47,7 +65,7 @@ export const checkAuth = createAsyncThunk(
       "http://localhost:3000/api/auth/check-auth",
       {
         withCredentials: true,
-        header: {
+        headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
           // Expires: '0'
         }
@@ -111,6 +129,22 @@ const authSlice = createSlice({
         state.isLoading = false
         state.user = null
         state.isAuthenticated = false
+      })
+
+
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true 
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        console.log(action)
+        state.isLoading = false
+
+       state.user = null;
+       state.isAuthenticated = false;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false
+       state.error = action.payload;
       })
 }
 
