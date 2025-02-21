@@ -1,17 +1,116 @@
+import { useEffect, useRef } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import axios from "axios";
 
+function ProductImageUpload({
+  imageFile,
+  setImageFile,
+  uploadedImageUrl,
+  setUploadImageUrl,
+  imageLoadingState,
+  setImageLoadingState
+}) {
+  const inputRef = useRef(null);
 
-function ProductImageUpload() {
-    return ( 
-        <div className="w-full max-w-md mx-auto">
-            <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
+  function handleImageFileChange(e) {
+    // console.log(e.target.files);
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) setImageFile(selectedFile);
+  }
 
-            <div>
-                <Input id="image-upload" type="file" className="hidden"/>
+  function handleDragOver(e) {
+    e.preventDefault();
+  }
+
+  // For Drag and Drop images
+  function handleDrop(e) {
+    e.preventDefault();
+
+    // For Drag and Drop images
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (droppedFile) setImageFile(droppedFile);
+  }
+
+  function handleRemoveImage(e) {
+    setImageFile(null);
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  }
+
+  // console.log(imageFile)
+
+  async function uploadImageToCloudinary() {
+    setImageLoadingState(true); 
+
+    const data = new FormData();
+
+    // my file below is from router
+    data.append("my_file", imageFile);
+    const response = await axios.post(
+      "http://localhost:3000/api/admin/products/upload-image",
+      data
+    );
+
+    console.log(response);
+
+    if (response?.data?.success) {
+      setUploadImageUrl(response.data.result.url);
+      setImageLoadingState(false);
+    }
+  }
+
+  useEffect(() => {
+    if (imageFile !== null) uploadImageToCloudinary();
+  }, [imageFile]);
+
+  return (
+    <div className="w-full max-w-md mx-auto">
+      <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
+
+      <div
+        className="border-2 border-dashed rounded-lg p-4"
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        <Input
+          id="image-upload"
+          type="file"
+          //   className="hidden"
+          ref={inputRef}
+          onChange={handleImageFileChange}
+        />
+        {!imageFile ? (
+          <label
+            htmlFor="image-upload"
+            className="flex flex-col items-center justify-center h-32 cursor-pointer"
+          >
+            <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
+            <span>Drag & Drop or click to uplod image</span>
+          </label>
+        ) : (
+          <div className="flex items-center justify-between">
+            <div className="flex items center">
+              <FileIcon className="w-8 text-primary mr-2 h-8" />
             </div>
-        </div>
-     );
+            <p className="text-sm font-medium">{imageFile.name}</p>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:tex-foreground"
+              onClick={handleRemoveImage}
+            >
+              <XIcon className="w-4 h-4" />
+              <span className="sr-only">Remove File</span>
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default ProductImageUpload;

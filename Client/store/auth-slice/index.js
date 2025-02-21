@@ -55,7 +55,6 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-
 // CheckAuth
 export const checkAuth = createAsyncThunk(
   "/auth/checkauth",
@@ -66,16 +65,16 @@ export const checkAuth = createAsyncThunk(
       {
         withCredentials: true,
         headers: {
-          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          "Cache-Control":
+            "no-store, no-cache, must-revalidate, proxy-revalidate",
           // Expires: '0'
-        }
+        },
       }
     );
     return response.data;
   }
 );
 
- 
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -83,71 +82,84 @@ const authSlice = createSlice({
     setUser: (state, action) => {},
   },
   extraReducers: (builder) => {
+    // builder
+    //   .addCase(registerUser.pending, (state) => {
+    //     state.isLoading = true
+    //   })
+    //   .addCase(registerUser.fulfilled, (state, action) => {
+    //     state.isLoading = false
+    //     state.user = null
+    //     state.isAuthenticated = true
+    //   })
+    //   .addCase(registerUser.rejected, (state, action) => {
+    //     state.isLoading = false
+    //     state.user = action.payload.user;
+    //     state.isAuthenticated = false
+    //     state.error = action.payload || "Registration failed";
+    //   })
     builder
       .addCase(registerUser.pending, (state) => {
-        state.isLoading = true 
+        state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.user = null
-        state.isAuthenticated = true 
+        state.isLoading = false;
+        state.user = action.payload.user || null // ✅ Store user info if needed
+        state.isAuthenticated = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.isLoading = false
-        state.user = null
-        state.isAuthenticated = false
+        state.isLoading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.error = action.payload || "Registration failed"; // ✅ Store error message
       })
 
       .addCase(loginUser.pending, (state) => {
-        state.isLoading = true 
+        state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log(action)
-        state.isLoading = false
-        state.user = !action.payload.success ? null : action.payload.user
-        state.isAuthenticated = !action.payload.success ? false : true 
+        console.log(action);
+        state.isLoading = false;
+        state.user = !action.payload.success ? null : action.payload.user;
+        state.isAuthenticated = !action.payload.success ? false : true;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.isLoading = false
-        state.user = null
-        state.isAuthenticated = false
+        state.isLoading = false;
+        state.user = null;
+        state.isAuthenticated = false;
       })
-
 
       .addCase(checkAuth.pending, (state) => {
-        state.isLoading = true 
+        state.isLoading = true;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
-        console.log(action)
-        state.isLoading = false
+        console.log(action);
+        state.isLoading = false;
 
-        state.user = !action.payload.success ? null : action.payload.user
+        state.user = !action.payload.success ? null : action.payload.user;
 
-        state.isAuthenticated = action.payload.success
+        state.isAuthenticated = action.payload.success;
       })
       .addCase(checkAuth.rejected, (state, action) => {
-        state.isLoading = false
-        state.user = null
-        state.isAuthenticated = false
+        state.isLoading = false;
+        state.user = null;
+        state.isAuthenticated = false;
       })
-
 
       .addCase(logoutUser.pending, (state) => {
-        state.isLoading = true 
+        state.isLoading = true;
       })
       .addCase(logoutUser.fulfilled, (state, action) => {
-        console.log(action)
-        state.isLoading = false
+        console.log(action);
+        state.isLoading = false;
 
-       state.user = null;
-       state.isAuthenticated = false;
+        state.user = null;
+        state.isAuthenticated = false;
       })
       .addCase(logoutUser.rejected, (state, action) => {
-        state.isLoading = false
-       state.error = action.payload;
-      })
-}
-
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
 export const { setUser } = authSlice.actions;

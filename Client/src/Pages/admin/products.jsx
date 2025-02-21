@@ -5,7 +5,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetDescription
+  SheetDescription,
 } from "../../components/ui/sheet";
 import CommonForm from "@/components/common/form";
 import { addProductFormElements } from "@/config";
@@ -26,6 +26,9 @@ function AdminProducts() {
   const [openCreateProductsDialog, setOpenCreateProductsDialog] =
     useState(false);
   const [formData, setFormData] = useState(initialFormData);
+  const [imageFile, setImageFile] = useState(null);
+  const [uploadedImageUrl, setUploadImageUrl] = useState("");
+  const [imageLoadingState, setImageLoadingState] = useState(false)
 
   function onSubmit(e) {
     e.preventDefault();
@@ -47,13 +50,24 @@ function AdminProducts() {
         >
           <SheetContent side="right" className="overflow-auto">
             <SheetHeader>
+
               <SheetTitle>Add New Product</SheetTitle>
+
               <SheetDescription>
                 Fill out the form below to add a new product.
               </SheetDescription>
 
-              <ProductImageUpload />
-              
+
+              <ProductImageUpload
+                imageFile={imageFile}
+                setImageFile={setImageFile}
+                uploadedImageUrl={uploadedImageUrl}
+                setUploadImageUrl={setUploadImageUrl}
+                imageLoadingState = {imageLoadingState}
+                setImageLoadingState = {setImageLoadingState}
+              />
+
+
             </SheetHeader>
 
             <div className="py-6">

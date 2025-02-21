@@ -3,43 +3,47 @@ import { Navigate, useLocation } from "react-router-dom";
 function CheckAuth({ isAuthenticated, user, children }) {
   const location = useLocation();
 
-  console.log("Current Path:", location.pathname);
-  console.log("Authenticated:", isAuthenticated);
-  console.log("User:", user);
+  // ✅ If already authenticated and visiting "/auth/register" → Redirect to login
+  if (isAuthenticated && location.pathname === "/auth/register") {
+    return <Navigate to="/auth/login" replace />;
+  }
 
-  // Redirect unauthenticated users to login (except auth pages)
+  // ✅ If already authenticated and visiting "/auth/login" → Redirect to correct dashboard
+  else if (isAuthenticated && location.pathname === "/auth/login") {
+    return user?.role === "admin" ? (
+      <Navigate to="/admin/dashboard" replace />
+    ) : (
+      <Navigate to="/shop/home" replace />
+    );
+  }
+  else {
+    <Navigate to="/auth/login" />;
+  }
+
+  // ✅ Redirect unauthenticated users away from protected pages
   if (
     !isAuthenticated &&
     !["/auth/login", "/auth/register"].includes(location.pathname)
   ) {
-    return <Navigate to="/auth/login" />;
+    return <Navigate to="/auth/login" replace />;
   }
 
-  // Redirect authenticated users away from auth pages
-  if (
-    isAuthenticated &&
-    ["/auth/login", "/auth/register"].includes(location.pathname)
-  ) {
-    if (user?.role === "admin") return <Navigate to="/admin/dashboard" />;
-    return <Navigate to="/shop/home" />; // Default for non-admin users
-  }
-
-  // Prevent regular users from accessing admin pages
+  // ✅ Prevent regular users from accessing admin pages
   if (
     isAuthenticated &&
     user?.role !== "admin" &&
     location.pathname.startsWith("/admin")
   ) {
-    return <Navigate to="/unauth-page" />;
+    return <Navigate to="/unauth-page" replace />;
   }
 
-  // Prevent admins from accessing shopping pages
+  // ✅ Prevent admins from accessing shopping pages
   if (
     isAuthenticated &&
     user?.role === "admin" &&
     location.pathname.startsWith("/shop")
   ) {
-    return <Navigate to="/admin/dashboard" />;
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return <>{children}</>;
