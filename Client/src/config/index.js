@@ -59,7 +59,7 @@ export const addProductFormElements = [
   },
   {
     label: "Category",
-    name: "catergory",
+    name: "category",
     componentType: "select",
     options: [
       { id: "men", label: "Men" },
@@ -91,7 +91,7 @@ export const addProductFormElements = [
   {
     label: "Sale Price",
     name: "salePrice",
-    componentType: "number",
+    componentType: "input",
     type: "number",
     placeholder: "Enter sale price (optional)",
   },

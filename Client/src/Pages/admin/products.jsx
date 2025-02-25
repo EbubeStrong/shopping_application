@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
 import {
   Sheet,
@@ -10,6 +10,12 @@ import {
 import CommonForm from "@/components/common/form";
 import { addProductFormElements } from "@/config";
 import ProductImageUpload from "@/components/admin-view/image-upload";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addNewProduct,
+  fetchAllProducts,
+} from "../../../store/admin/products-slice";
+import { useToast } from "@/hooks/use-toast";
 
 const initialFormData = {
   image: null,
@@ -27,13 +33,62 @@ function AdminProducts() {
     useState(false);
   const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
-  const [uploadedImageUrl, setUploadImageUrl] = useState("");
-  const [imageLoadingState, setImageLoadingState] = useState(false)
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(""); // Renamed for clarity
+  const [imageLoadingState, setImageLoadingState] = useState(false);
+
+  const { productList } = useSelector((state) => state.adminProducts);
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+
+  console.log("Form Data Before Submitting:", {
+    ...formData,
+    image: uploadedImageUrl,
+  });
 
   function onSubmit(e) {
     e.preventDefault();
-    console.log(formData);
+
+    if (!uploadedImageUrl) {
+      toast({
+        title: "Error",
+        description: "Please upload an image before submitting",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    dispatch(
+      addNewProduct({
+        ...formData,
+        image: uploadedImageUrl,
+      })
+    ).then((data) => {
+      console.log("Submitting form:", formData, uploadedImageUrl);
+      if (data?.payload?.success) {
+        dispatch(fetchAllProducts());
+        setOpenCreateProductsDialog(false);
+        setFormData(initialFormData);
+        setImageFile(null);
+        toast({
+          title: "Success",
+          description: "Product added successfully",
+          variant: "default",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: data?.payload?.message || "Error adding product",
+          variant: "destructive",
+        });
+      }
+    });
   }
+
+  useEffect(() => {
+    dispatch(fetchAllProducts());
+  }, [dispatch]);
+
+  console.log(productList, "productList");
 
   return (
     <>
@@ -50,24 +105,20 @@ function AdminProducts() {
         >
           <SheetContent side="right" className="overflow-auto">
             <SheetHeader>
-
               <SheetTitle>Add New Product</SheetTitle>
 
               <SheetDescription>
                 Fill out the form below to add a new product.
               </SheetDescription>
 
-
               <ProductImageUpload
                 imageFile={imageFile}
                 setImageFile={setImageFile}
-                uploadedImageUrl={uploadedImageUrl}
-                setUploadImageUrl={setUploadImageUrl}
-                imageLoadingState = {imageLoadingState}
-                setImageLoadingState = {setImageLoadingState}
+                uploadImageUrl={uploadedImageUrl}
+                setUploadImageUrl={setUploadedImageUrl} // Updated prop name
+                imageLoadingState={imageLoadingState}
+                setImageLoadingState={setImageLoadingState}
               />
-
-
             </SheetHeader>
 
             <div className="py-6">
