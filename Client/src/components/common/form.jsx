@@ -41,6 +41,12 @@ function CommonForm({
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
             value={value}
+            onChange={(e) => {
+        setFormData({
+          ...formData,
+          [getControlItem.name]: e.target.value, 
+        });
+      }}
           />
         );
         break;
@@ -93,7 +99,7 @@ function CommonForm({
         ))}
       </div>
       
-      <Button type="submit" className="mt-2 w-full">
+      <Button type="submit" className="mt-6 w-full">
         {buttonText || "Submit"}
       </Button>
     </form>
