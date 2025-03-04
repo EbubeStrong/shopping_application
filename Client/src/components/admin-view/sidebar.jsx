@@ -57,25 +57,24 @@ function MenuItems({setOpen}) {
 function AdminSideBar({ open, setOpen }) {
   const navigate = useNavigate();
   return (
-      <>
-          {/* I HAVE NOT YET INSTALLED THIS SHEET */}
+    <>
+      {/* I HAVE NOT YET INSTALLED THIS SHEET */}
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="left" className="w-64" >
+        <SheetContent side="left" className="w-64">
           <div className="flex flex-col h-full">
-            <SheetHeader className='border-b'>
+            <SheetHeader className="border-b">
               <SheetTitle className="flex gap-2 mt-5 mb-5">
                 <ChartNoAxesCombined size={30} />
                 Admin Panel
               </SheetTitle>
             </SheetHeader>
 
-                      <MenuItems setOpen={setOpen} />
-                      
+            <MenuItems setOpen={setOpen} />
           </div>
         </SheetContent>
       </Sheet>
 
-      <aside className="hidden w-64 flex-col border-r bg-background p-6 lg:flex">
+      <aside className="hidden w-64 h-screen fixed z-[999] left-0 top-0 flex-col border-r bg-background p-6 lg:flex ">
         <div
           onClick={() => navigate("/admin/dashboard")}
           className="flex items-center gap-2 cursor-pointer"
