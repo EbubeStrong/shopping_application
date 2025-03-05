@@ -119,7 +119,7 @@ const editProduct = async (req, res) => {
     findProduct.image = image || findProduct.image;
 
     await findProduct.save();
-    res.status({
+    res.status(200).json({
       success: true,
       data: findProduct,
     });
