@@ -12,6 +12,7 @@ import ProductImageUpload from "@/components/admin-view/image-upload";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNewProduct,
+  editProduct,
   fetchAllProducts,
 } from "../../../store/admin/products-slice";
 import { useToast } from "@/hooks/use-toast";
@@ -30,19 +31,15 @@ const initialFormData = {
 };
 
 function AdminProducts() {
-  
   const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(""); // Renamed for clarity
   const [imageLoadingState, setImageLoadingState] = useState(false);
+  const [currentEditedId, setCurrentEditedId] = useState(null);
 
   // a way for passing of props through / when using Outlet
-   const {
-     openCreateProductsDialog,
-     setOpenCreateProductsDialog,
-  } = useOutletContext();
-  
-
+  const { openCreateProductsDialog, setOpenCreateProductsDialog } =
+    useOutletContext();
 
   const productList = useSelector(
     (state) => state.adminProducts.productList.data || []
@@ -53,81 +50,110 @@ function AdminProducts() {
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  console.log("Form Data Before Submitting:", {
-    ...formData,
-    image: uploadedImageUrl,
-  });
+  // console.log("Form Data Before Submitting:", {
+  //   ...formData,
+  //   image: uploadedImageUrl,
+  // });
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
 
-    if (!uploadedImageUrl) {
-      toast({
-        title: "Error",
-        description: "Please upload an image before submitting",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (currentEditedId !== null) {
+      try {
+        const result = await dispatch(
+          editProduct({ id: currentEditedId, formData })
+        ).unwrap();
 
-    dispatch(
-      addNewProduct({
-        ...formData,
-        image: uploadedImageUrl,
-      })
-    ).then((data) => {
-      console.log("Submitting form:", formData, uploadedImageUrl);
-      if (data?.payload?.success) {
+        dispatch(fetchAllProducts());
+        setOpenCreateProductsDialog(false);
+        setFormData(initialFormData);
+
+        toast({
+          title: "Success",
+          description: "Product edited successfully",
+          variant: "default",
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: error?.message || "Error editing product",
+          variant: "destructive",
+        });
+      }
+    } else {
+      if (!uploadedImageUrl) {
+        toast({
+          title: "Error",
+          description: "Please upload an image before submitting",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      try {
+        console.log("Submitting form:", formData, uploadedImageUrl);
+        const result = await dispatch(
+          addNewProduct({ ...formData, image: uploadedImageUrl })
+        ).unwrap();
+
         dispatch(fetchAllProducts());
         setOpenCreateProductsDialog(false);
         setFormData(initialFormData);
         setImageFile(null);
+
         toast({
           title: "Success",
           description: "Product added successfully",
           variant: "default",
         });
-      } else {
+      } catch (error) {
         toast({
           title: "Error",
-          description: data?.payload?.message || "Error adding product",
+          description: error?.message || "Error adding product",
           variant: "destructive",
         });
       }
-    });
+    }
   }
 
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 
-
-
   // console.log(productList, "productList");
 
   return (
     <>
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 lg:ml-64 p-6 ">
-        {productList && productList.length > 0
-          ? productList.map((productItem, index) => {
-              console.log("Rendering product:", productItem);
-              return (
-                <AdminProductTile
-                  key={productItem.id || index}
-                  product={productItem}
-                />
-              );
-            })
-          : console.log("No products to display")}
+        {productList &&
+          productList.length > 0 &&
+          productList.map((productItem, index) => {
+            // console.log("Rendering product:", productItem);
+            return (
+              <AdminProductTile
+                key={productItem.id || index}
+                product={productItem}
+                setCurrentEditedId={setCurrentEditedId}
+                setOpenCreateProductsDialog={setOpenCreateProductsDialog}
+                setFormData={setFormData}
+              />
+            );
+          })}
       </div>
 
       <Sheet
         open={openCreateProductsDialog}
-        onOpenChange={setOpenCreateProductsDialog}
+        onOpenChange={() => {
+          setOpenCreateProductsDialog(false);
+          setFormData(initialFormData);
+          setCurrentEditedId(null);
+        }}
       >
         <SheetContent side="right" className="overflow-auto">
           <SheetHeader>
-            <SheetTitle>Add New Product</SheetTitle>
+            <SheetTitle>
+              {currentEditedId !== null ? "Edit Product" : "Add New Product"}
+            </SheetTitle>
 
             <SheetDescription>
               Fill out the form below to add a new product.
@@ -140,6 +166,7 @@ function AdminProducts() {
               setUploadImageUrl={setUploadedImageUrl} // Updated prop name
               imageLoadingState={imageLoadingState}
               setImageLoadingState={setImageLoadingState}
+              isEditMode={currentEditedId !== null}
             />
           </SheetHeader>
 
@@ -148,7 +175,7 @@ function AdminProducts() {
               formData={formData}
               formControls={addProductFormElements}
               setFormData={setFormData}
-              buttonText="Add"
+              buttonText={currentEditedId !== null ? "Edit" : "Add"}
               onSubmit={onSubmit}
             />
           </div>

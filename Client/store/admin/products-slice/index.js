@@ -29,26 +29,43 @@ export const fetchAllProducts = createAsyncThunk(
     const result = await axios.get(
       "http://localhost:3000/api/admin/products/get"
     );
-    console.log(result, "result")
+    // console.log(result, "result")
     return result?.data;
   }
 );
 
 export const editProduct = createAsyncThunk(
   "/products/editProduct",
-  async (id, formData) => {
-    const result = await axios.put(
-      `http://localhost:3000/api/admin/products/edit/${id}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return result?.data;
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      console.log("🚀 API Call: Editing product", id, formData);
+      const result = await axios.put(
+        `http://localhost:3000/api/admin/products/edit/${id}`,
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      console.log("✅ API Response:", result.data);
+
+      // Check if return actually happens
+      console.log("👉 Returning result:", result.data);
+      return result.data;
+    } catch (error) {
+      console.error("❌ Edit error in thunk:", error);
+
+      console.log(
+        "👉 Returning rejection:",
+        error.response?.data || "Edit failed"
+      );
+      return rejectWithValue(error.response?.data || "Edit failed");
+    }
   }
 );
+
+
+
 
 export const deleteProduct = createAsyncThunk(
   "/products/deleteProduct",
@@ -70,7 +87,7 @@ const AdminProductsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
-          console.log("API Response:", action.payload);
+          // console.log("API Response:", action.payload);
 
 
         state.isLoading = false;
