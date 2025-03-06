@@ -7,18 +7,28 @@ function CheckAuth({ isAuthenticated, user, children }) {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const storedAuth = localStorage.getItem("auth");
-    if (storedAuth) {
-      try {
-        const parsedUser = JSON.parse(storedAuth);
-        dispatch(setUser(parsedUser)); 
-      } catch (error) {
-        console.error("Invalid auth data:", error);
-        dispatch(setUser(null));
-      }
-    }
-  }, [dispatch]);
+ useEffect(() => {
+   console.log("Checking local storage for auth...");
+   const storedAuth = localStorage.getItem("auth");
+
+   if (!storedAuth) {
+     console.log(
+       "No auth data found in localStorage. Dispatching setUser(null)"
+     );
+     dispatch(setUser(null));
+   } else {
+     try {
+       const parsedUser = JSON.parse(storedAuth);
+       console.log("Found auth data:", parsedUser);
+       dispatch(setUser(parsedUser));
+     } catch (error) {
+       console.error("Error parsing auth data:", error);
+       dispatch(setUser(null));
+     }
+   }
+ }, [dispatch]);
+
+
 
   // ✅ If authenticated and visiting "/auth/register" → Redirect to login
   if (isAuthenticated && location.pathname === "/auth/register") {

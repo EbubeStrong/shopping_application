@@ -115,12 +115,29 @@ const authSlice = createSlice({
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
+      // .addCase(loginUser.fulfilled, (state, action) => {
+      //   console.log(action);
+      //   state.isLoading = false;
+      //   state.user = !action.payload.success ? null : action.payload.user;
+      //   state.isAuthenticated = !action.payload.success ? false : true;
+      //   localStorage.setItem("auth", JSON.stringify(action.payload.user));
+      // })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log(action);
+        console.log("Login Response:", action);
         state.isLoading = false;
-        state.user = !action.payload.success ? null : action.payload.user;
-        state.isAuthenticated = !action.payload.success ? false : true;
+
+        if (action.payload.success) {
+          state.user = action.payload.user;
+          state.isAuthenticated = true;
+
+          // ✅ Store auth data only if login is successful
+          localStorage.setItem("auth", JSON.stringify(action.payload.user));
+        } else {
+          state.user = null;
+          state.isAuthenticated = false;
+        }
       })
+
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
         state.user = null;
