@@ -94,7 +94,7 @@ const editProduct = async (req, res) => {
       totalStock,
     } = req.body;
 
-    const findProduct = await Product.findById(id);
+    let findProduct = await Product.findById(id);
 
     if (!findProduct)
       return res.status(404).json({
@@ -110,9 +110,9 @@ const editProduct = async (req, res) => {
 
     findProduct.brand = brand || findProduct.brand;
 
-    findProduct.price = price || findProduct.price;
+    findProduct.price = price === '' ? 0 : price || findProduct.price;
 
-    findProduct.salePrice = salePrice || findProduct.salePrice;
+    findProduct.salePrice = salePrice === "" ? 0 : salePrice || findProduct.salePrice;
 
     findProduct.totalStock = totalStock || findProduct.totalStock;
 
@@ -137,26 +137,31 @@ const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const product = await Product.findByIdAndDelete(id);
-
-    if (!product)
+    const product = await Product.findById(id);
+    
+    if (!product) {
       return res.status(404).json({
         success: false,
         message: "Product not found",
       });
+    }
+
+    await Product.findByIdAndDelete(id);
 
     res.status(200).json({
       success: true,
       message: "Product deleted successfully",
     });
+
   } catch (error) {
-    console.log(error);
-    res.json({
+    console.error("❌ Error deleting product:", error);
+    res.status(500).json({
       success: false,
       message: "Error deleting product",
     });
   }
 };
+
 
 module.exports = {
   handleImageUpload,

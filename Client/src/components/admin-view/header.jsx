@@ -12,6 +12,7 @@ function AdminHeader({
   setOpenCreateProductsDialog,
   setShowButton,
   showButton,
+  showAddButton,
 }) {
   const dispatch = useDispatch();
   const { toast } = useToast();
@@ -47,7 +48,7 @@ function AdminHeader({
 
       <div className="flex gap-7 flex-1 justify-center items-center mb-3 pt-3">
         <div className=" w-full flex justify-end">
-          {showButton && (
+          {showAddButton ? showButton && (
             <Button
               onClick={() => {
                 setOpenCreateProductsDialog(true);
@@ -56,7 +57,7 @@ function AdminHeader({
             >
               Add New Product
             </Button>
-          )}
+          ) : ""}
         </div>
 
         <Button

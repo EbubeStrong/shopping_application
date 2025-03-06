@@ -12,6 +12,7 @@ import ProductImageUpload from "@/components/admin-view/image-upload";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNewProduct,
+  deleteProduct,
   editProduct,
   fetchAllProducts,
 } from "../../../store/admin/products-slice";
@@ -49,11 +50,6 @@ function AdminProducts() {
 
   const dispatch = useDispatch();
   const { toast } = useToast();
-
-  // console.log("Form Data Before Submitting:", {
-  //   ...formData,
-  //   image: uploadedImageUrl,
-  // });
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -116,6 +112,27 @@ function AdminProducts() {
     }
   }
 
+  function isFormValid() {
+    return Object.keys(formData)
+      .map((key) => formData[key] !== "")
+      .every((item) => item);
+  }
+
+  const handleDelete = (getCurrentProduct) => {
+    console.log("Deleting product with id:", getCurrentProduct);
+    dispatch(deleteProduct(getCurrentProduct)).then((data) => {
+      // console.log(data, "delete product")
+      if (data?.payload?.success) {
+        dispatch(fetchAllProducts());
+        toast({
+          title: "Success",
+          description: "Product deleted successfully",
+          variant: "default",
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
@@ -124,7 +141,7 @@ function AdminProducts() {
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 lg:ml-64 p-6 ">
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 px-5 ">
         {productList &&
           productList.length > 0 &&
           productList.map((productItem, index) => {
@@ -136,6 +153,7 @@ function AdminProducts() {
                 setCurrentEditedId={setCurrentEditedId}
                 setOpenCreateProductsDialog={setOpenCreateProductsDialog}
                 setFormData={setFormData}
+                handleDelete={handleDelete}
               />
             );
           })}
@@ -177,6 +195,7 @@ function AdminProducts() {
               setFormData={setFormData}
               buttonText={currentEditedId !== null ? "Edit" : "Add"}
               onSubmit={onSubmit}
+              isBtnDisabled={!isFormValid()}
             />
           </div>
         </SheetContent>

@@ -46,19 +46,11 @@ export const editProduct = createAsyncThunk(
           headers: { "Content-Type": "application/json" },
         }
       );
-
-      console.log("✅ API Response:", result.data);
-
-      // Check if return actually happens
-      console.log("👉 Returning result:", result.data);
       return result.data;
     } catch (error) {
       console.error("❌ Edit error in thunk:", error);
 
-      console.log(
-        "👉 Returning rejection:",
-        error.response?.data || "Edit failed"
-      );
+      console.log("👉 Returning rejection:", error.response?.data || "Edit failed");
       return rejectWithValue(error.response?.data || "Edit failed");
     }
   }
@@ -69,11 +61,16 @@ export const editProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "/products/deleteProduct",
-  async (id) => {
-    const result = await axios.delete(
-      `http://localhost:3000/api/admin/products/delete/${id}`
-    );
-    return result?.data;
+  async (id, { rejectWithValue }) => {
+    try {
+      const result = await axios.delete(
+        `http://localhost:3000/api/admin/products/delete/${id}`
+      );
+      return result?.data;
+    } catch (error) {
+      console.error("❌ Delete product failed:", error);
+      return rejectWithValue(error.response?.data || "Error deleting product");
+    }
   }
 );
 
