@@ -30,7 +30,7 @@ const adminSidebarMenuItems = [
   },
 ];
 
-function MenuItems({setOpen}) {
+function MenuItems({setOpen, setShowAddButton}) {
   const navigate = useNavigate();
 
   return (
@@ -41,7 +41,8 @@ function MenuItems({setOpen}) {
             className="flex cursor-pointer text-xl items-center gap-2 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground"
             key={menuItem.id}
                 onClick={() => {
-                    navigate(menuItem.path)
+                  navigate(menuItem.path)
+                  menuItem.path === "/admin/products" ? setShowAddButton(true) : setShowAddButton(false)
                     !setOpen ? null : setOpen(false)
             }}
           >
@@ -54,7 +55,7 @@ function MenuItems({setOpen}) {
   );
 }
 
-function AdminSideBar({ open, setOpen }) {
+function AdminSideBar({ open, setOpen, setShowAddButton }) {
   const navigate = useNavigate();
   return (
     <>
@@ -69,7 +70,7 @@ function AdminSideBar({ open, setOpen }) {
               </SheetTitle>
             </SheetHeader>
 
-            <MenuItems setOpen={setOpen} />
+            <MenuItems setOpen={setOpen} setShowAddButton={setShowAddButton} />
           </div>
         </SheetContent>
       </Sheet>
@@ -82,7 +83,7 @@ function AdminSideBar({ open, setOpen }) {
           <ChartNoAxesCombined size={30} />
           <h1 className="text-2xl font-extrabold">Admin Panel</h1>
         </div>
-        <MenuItems />
+        <MenuItems setShowAddButton={setShowAddButton} />
       </aside>
     </>
   );
