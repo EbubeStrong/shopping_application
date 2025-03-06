@@ -43,14 +43,10 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
   "/auth/logout",
 
-  async (formData) => {
-    const response = await axios.post(
-      "http://localhost:3000/api/auth/logout",
-      formData,
-      {
-        withCredentials: true,
-      }
-    );
+  async () => {
+    const response = await axios.post("http://localhost:3000/api/auth/logout", {
+      withCredentials: true,
+    });
     return response.data;
   }
 );
@@ -79,7 +75,10 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action) => {},
+    setUser: (state, action) => {
+            state.user = action.payload;
+            state.isAuthenticated = !!action.payload; 
+    },
   },
   extraReducers: (builder) => {
     // builder
@@ -103,8 +102,8 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user || null // ✅ Store user info if needed
-        state.isAuthenticated = true;
+        state.user = action.payload.user || null; // ✅ Store user info if needed
+        state.isAuthenticated = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -154,6 +153,13 @@ const authSlice = createSlice({
 
         state.user = null;
         state.isAuthenticated = false;
+
+        // ✅ Clear authentication data from storage
+        localStorage.removeItem("auth"); // Adjust if using a different key
+        sessionStorage.removeItem("auth");
+
+        // ✅ Optionally, reload the page to ensure state is reset
+        // window.location.href = "/auth/login";
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
