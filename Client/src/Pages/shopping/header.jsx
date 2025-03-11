@@ -1,6 +1,13 @@
 import { Button } from "../../components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { House, LogOut, LogOutIcon, Menu, ShoppingCart, UserCog } from "lucide-react";
+import {
+  House,
+  LogOut,
+  LogOutIcon,
+  Menu,
+  ShoppingCart,
+  UserCog,
+} from "lucide-react";
 import { logoutUser } from "../../../store/auth-slice";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,7 +23,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
- 
 // import { logoutUser } from "../../../store/auth-slice";
 
 function MenuItems() {
@@ -38,13 +44,12 @@ function MenuItems() {
 }
 
 function HeaderRightContent() {
-   const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   // console.log(user, "userName")
 
   const dispatch = useDispatch();
- const { toast } = useToast();
-const navigate = useNavigate();
-
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   function handleLogout() {
     // handle logout
@@ -75,7 +80,7 @@ const navigate = useNavigate();
         <DropdownMenuTrigger asChild>
           <Avatar className="bg-black">
             <AvatarFallback className="bg-black cursor-pointer text-white font-extrabold">
-              {user?.userName?.[0]?.toUpperCase()}
+              {user?.userName[0]?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
@@ -83,14 +88,19 @@ const navigate = useNavigate();
         <DropdownMenuContent side="right" className="w-56 translate-y-6">
           <DropdownMenuLabel>
             Logged in as{" "}
-            {user?.userName.charAt(0).toUpperCase() +
-              user?.userName.slice(1).toLowerCase()}
+            {user?.userName.charAt(0).toUpperCase() + user?.userName.slice(1)}
           </DropdownMenuLabel>
 
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => navigate("/shop/account")}>
             <UserCog className="mr-2 h-4 w-4" />
             Account
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => navigate("/shop/listing")}>
+            <UserCog className="mr-2 h-4 w-4" />
+            Listing
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -104,8 +114,7 @@ const navigate = useNavigate();
 }
 
 function ShoppingHeader() {
-   const { isAuthenticated} = useSelector((state) => state.auth);
-
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b  px-4 py-3 bg-background ">
