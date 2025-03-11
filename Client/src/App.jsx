@@ -33,6 +33,7 @@ export default function App() {
   // }
 
   const { user, isAuthenticated, isLoading } = useSelector(state => state.auth)
+  console.log(user, isAuthenticated, "userName", "isAuthenticated")
   
   const dispatch = useDispatch()
   useEffect(() => {
@@ -108,12 +109,12 @@ export default function App() {
         <Route path="/shop" element={
           <CheckAuth isAuthenticated={isAuthenticated} user={user}>
             <ShoppingLayout />
-          </CheckAuth>
+          </CheckAuth> 
         }>
+          <Route  path="home" element={<ShoppingHome />} />
           <Route path="account" element={<ShoppingAccount />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
-          <Route path="listings" element={<ShoppingListing />} />
-          <Route path="home" element={<ShoppingHome />} />
+          <Route path="listing" element={<ShoppingListing />} />
         </Route>
 
         <Route path="/unauth-page" element={<UnAuthPage/>} />

@@ -22,25 +22,32 @@ const AuthLogin = () => {
   
 
   
-  function onSubmit(e) {
-    e.preventDefault()
-     dispatch(
-      loginUser(formData)).then((data) => {
-        if (data?.payload?.success) {
-          toast({
-            title: data?.payload?.message
-          });
-          navigate("/auth/register");
-        }
-        else {
-          toast({
-            title: data?.payload?.message,
-            variant: "destructive"
-          });
-        }
-        // console.log(data)
-      })
+  async function onSubmit(e) {
+  e.preventDefault();
+  
+  try {
+    const data = await dispatch(loginUser(formData));
+
+    if (data?.payload?.success) {
+      toast({
+        title: data.payload.message,
+      });
+      navigate("/auth/register");  // Uncomment if you want redirection
+    } else {
+      toast({
+        title: data?.payload?.message || "An error occurred",
+        variant: "destructive",
+      });
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    toast({
+      title: "Something went wrong. Please try again.",
+      variant: "destructive",
+    });
   }
+}
+
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">

@@ -76,8 +76,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-            state.user = action.payload;
-            state.isAuthenticated = !!action.payload; 
+      state.user = action.payload;
+      state.isAuthenticated = !!action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -116,27 +116,54 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       // .addCase(loginUser.fulfilled, (state, action) => {
+      //    console.log("Login API Response:", action.payload);
       //   console.log(action);
       //   state.isLoading = false;
       //   state.user = !action.payload.success ? null : action.payload.user;
       //   state.isAuthenticated = !action.payload.success ? false : true;
       //   localStorage.setItem("auth", JSON.stringify(action.payload.user));
       // })
+
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log("Login Response:", action);
-        state.isLoading = false;
+        console.log("Login API Response:", action.payload); // ✅ Check full API response
+        console.log("User from API:", action.payload.user); // ✅ Debugging user object
+
+          state.isLoading = false;
 
         if (action.payload.success) {
           state.user = action.payload.user;
           state.isAuthenticated = true;
 
-          // ✅ Store auth data only if login is successful
-          localStorage.setItem("auth", JSON.stringify(action.payload.user));
+          localStorage.setItem(
+            "auth",
+            JSON.stringify({
+              email: action.payload.user.email,
+              role: action.payload.user.role,
+              id: action.payload.user.id,
+              userName: action.payload.user.userName, // ✅ Ensure it's stored
+            })
+          );
         } else {
           state.user = null;
           state.isAuthenticated = false;
         }
       })
+
+      // .addCase(loginUser.fulfilled, (state, action) => {
+      //   console.log("Login Response:", action);
+      //   state.isLoading = false;
+
+      //   if (action.payload.success) {
+      //     state.user = action.payload.user;
+      //     state.isAuthenticated = true;
+
+      //     // ✅ Store auth data only if login is successful
+      //     localStorage.setItem("auth", JSON.stringify(action.payload.user));
+      //   } else {
+      //     state.user = null;
+      //     state.isAuthenticated = false;
+      //   }
+      // })
 
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

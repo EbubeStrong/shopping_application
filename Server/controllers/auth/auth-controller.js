@@ -93,53 +93,69 @@ const loginUser = async (req, res) => {
     }
 
     // Generate JWT token
-    // const token = jwt.sign(
-    //   {
-    //     id: checkUser._id,
-    //     role: checkUser.role,
-    //     email: checkUser.email,
-    //   },
+    const token = jwt.sign(
+      {
+        id: checkUser._id,
+        role: checkUser.role,
+        email: checkUser.email,
+        userName: checkUser.userName,
+      },
+      "CLIENT_SECRET_KEY",
+      { expiresIn: "60m" }
+    );
+
+    // Send token as HTTP-only cookie
+    res.cookie("token", token, { httpOnly: true, secure: false }).json({
+      success: true,
+      message: "Logged in successfully",
+      user: {
+        email: checkUser.email,
+        role: checkUser.role,
+        id: checkUser._id,
+        userName: checkUser.userName,
+      },
+    });
+
+    console.log("Response User:", {
+      email: checkUser.email,
+      role: checkUser.role,
+      id: checkUser._id,
+      userName: checkUser.userName, // ✅ Debugging log
+    });
+
+
+    // Generate Access Token (Short-lived)
+    // const accessToken = jwt.sign(
+    //   { id: checkUser._id, email: checkUser.email, role: checkUser.role, userName: checkUser.userName },
     //   "CLIENT_SECRET_KEY",
-    //   { expiresIn: "60m" }
+    //   { expiresIn: "60m" } // ✅ Short-lived token
     // );
 
-    // // Send token as HTTP-only cookie
-    // res.cookie("token", token, { httpOnly: true, secure: false }).json({
+    // // Generate Refresh Token (Long-lived)
+    // const refreshToken = jwt.sign(
+    //   { id: checkUser._id },
+    //   "REFRESH_SECRET_KEY",
+    //   { expiresIn: "7d" } // ✅ Lasts for 7 days
+    // );
+
+    // // Store refresh token in cookies
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   secure: false, 
+    //   sameSite: "strict",
+    // });
+
+    // res.json({
     //   success: true,
     //   message: "Logged in successfully",
+    //   accessToken, // Send access token in response
     //   user: {
     //     email: checkUser.email,
     //     role: checkUser.role,
     //     id: checkUser._id,
+    //     userName: checkUser.userName,
     //   },
     // });
-    // Generate Access Token (Short-lived)
-    const accessToken = jwt.sign(
-      { id: checkUser._id, email: checkUser.email, role: checkUser.role },
-      "CLIENT_SECRET_KEY",
-      { expiresIn: "60m" } // ✅ Short-lived token
-    );
-
-    // Generate Refresh Token (Long-lived)
-    const refreshToken = jwt.sign(
-      { id: checkUser._id },
-      "REFRESH_SECRET_KEY",
-      { expiresIn: "7d" } // ✅ Lasts for 7 days
-    );
-
-    // Store refresh token in cookies
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false, 
-      sameSite: "strict",
-    });
-
-    res.json({
-      success: true,
-      message: "Logged in successfully",
-      accessToken, // Send access token in response
-      user: { email: checkUser.email, role: checkUser.role, id: checkUser._id },
-    });
 
 
   } catch (e) {
