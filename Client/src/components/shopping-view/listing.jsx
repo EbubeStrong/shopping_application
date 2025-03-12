@@ -9,7 +9,7 @@ import {
 import { Button } from "../ui/button";
 import { ArrowUpDownIcon } from "lucide-react";
 import { sortOptions } from "@/config";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllFilteredProducts } from "../../../store/shop/product-slice";
 import ShoppingProductTile from "./userProduct-tile";
