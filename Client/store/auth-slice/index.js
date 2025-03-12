@@ -44,7 +44,8 @@ export const logoutUser = createAsyncThunk(
   "/auth/logout",
 
   async () => {
-    const response = await axios.post("http://localhost:3000/api/auth/logout", {
+    const response = await axios.post("http://localhost:3000/api/auth/logout", {},
+      {
       withCredentials: true,
     });
     return response.data;
@@ -52,24 +53,51 @@ export const logoutUser = createAsyncThunk(
 );
 
 // CheckAuth
-export const checkAuth = createAsyncThunk(
-  "/auth/checkauth",
+// export const checkAuth = createAsyncThunk(
+//   "/auth/checkauth",
 
-  async () => {
-    const response = await axios.get(
-      "http://localhost:3000/api/auth/check-auth",
-      {
-        withCredentials: true,
-        headers: {
-          "Cache-Control":
-            "no-store, no-cache, must-revalidate, proxy-revalidate",
-          // Expires: '0'
-        },
-      }
-    );
-    return response?.data;
+//   async () => {
+//     const response = await axios.get(
+//       "http://localhost:3000/api/auth/check-auth",
+//       {
+//         withCredentials: true,
+//         headers: {
+//           "Cache-Control":
+//             "no-store, no-cache, must-revalidate, proxy-revalidate",
+//           // Expires: '0'
+//         },
+//       }
+//     );
+//     return response?.data;
+//   }
+// );
+
+
+export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
+  // ✅ Read from local storage first
+  const storedUser = localStorage.getItem("auth");
+
+  if (storedUser) {
+    return { success: true, user: JSON.parse(storedUser) }; 
   }
-);
+
+  // ✅ Otherwise, check with the API
+  const response = await axios.get(
+    "http://localhost:3000/api/auth/check-auth",
+    {
+      withCredentials: true,
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+      },
+    }
+  );
+
+  return response?.data;
+});
+
+
+
 
 const authSlice = createSlice({
   name: "auth",
@@ -146,6 +174,7 @@ const authSlice = createSlice({
         } else {
           state.user = null;
           state.isAuthenticated = false;
+
         }
       })
 
@@ -169,6 +198,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+        state.error = action.error?.message || "Login failed";
       })
 
       .addCase(checkAuth.pending, (state) => {

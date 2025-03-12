@@ -13,21 +13,25 @@ function ProductFilter() {
 
       <div className="p-4 space-y-4">
         {Object.keys(filterOptions).map((keyItem) => (
-          <Fragment>
+          <Fragment key={keyItem}>
             <div>
               <h3 className="text-base font-bold">{keyItem}</h3>
               <div className="grid gap-2 mt-2">
-                {filterOptions[keyItem].map((options) => (
-                  <Label className="flex items-center gap-2 font font-medium">
-                        <Checkbox />
-                        {options.label}
+                {filterOptions[keyItem].map((options, index) => (
+                  <Label
+                    key={index}
+                    className="flex items-center gap-2 font-medium"
+                  >
+                    {" "}
+                    {/* ✅ Add key for inner map */}
+                    <Checkbox />
+                    {options.label}
                   </Label>
                 ))}
               </div>
-                </div>
-                
-                <Separator />
+            </div>
 
+            <Separator />
           </Fragment>
         ))}
       </div>

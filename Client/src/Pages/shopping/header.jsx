@@ -2,6 +2,7 @@ import { Button } from "../../components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import {
   House,
+  LayoutList,
   LogOut,
   LogOutIcon,
   Menu,
@@ -99,7 +100,7 @@ function HeaderRightContent() {
 
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => navigate("/shop/listing")}>
-            <UserCog className="mr-2 h-4 w-4" />
+            <LayoutList  className="mr-2 h-4 w-4" />
             Listing
           </DropdownMenuItem>
 
