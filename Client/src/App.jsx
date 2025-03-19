@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom"; // ✅ Remove BrowserRouter import
+import { Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 import AuthLayout from "./components/auth/layout";
 import AuthLogin from "./Pages/auth/login";
@@ -33,7 +33,7 @@ export default function App() {
   // }
 
   const { user, isAuthenticated, isLoading } = useSelector(state => state.auth)
-  console.log(user, isAuthenticated, "userName", "isAuthenticated")
+  // console.log(user, isAuthenticated, "userName", "isAuthenticated")
   
   const dispatch = useDispatch()
   useEffect(() => {
@@ -65,19 +65,20 @@ export default function App() {
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
         {/* <Route path="/" element={ } /> */}
-
         <Route
           path="/"
           element={
             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <AuthLayout />
+              <Outlet /> {/* Ensures nested routes work properly */}
             </CheckAuth>
           }
         >
-          <Route path="login" element={<AuthLogin />} />
-          <Route path="register" element={<AuthRegister />} />
+          <Route path="/" element={<AuthLayout />}>
+            <Route path="login" element={<AuthLogin />} />
+            <Route path="register" element={<AuthRegister />} />
+          </Route>
         </Route>
-        
+        ;
         <Route
           path="/auth"
           element={
@@ -89,7 +90,6 @@ export default function App() {
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
-
         <Route
           path="/admin"
           element={
@@ -103,22 +103,20 @@ export default function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
         </Route>
-
-
-
-        <Route path="/shop" element={
-          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-            <ShoppingLayout />
-          </CheckAuth> 
-        }>
-          <Route  path="home" element={<ShoppingHome />} />
+        <Route
+          path="/shop"
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+              <ShoppingLayout />
+            </CheckAuth>
+          }
+        >
+          <Route path="home" element={<ShoppingHome />} />
           <Route path="account" element={<ShoppingAccount />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="listing" element={<ShoppingListing />} />
         </Route>
-
-        <Route path="/unauth-page" element={<UnAuthPage/>} />
-
+        <Route path="/unauth-page" element={<UnAuthPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

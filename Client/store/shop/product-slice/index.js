@@ -33,7 +33,7 @@ const shopProductSlice = createSlice({
             
             .addCase(fetchAllFilteredProducts.fulfilled,
                 (state, action) => {
-                    console.log(action.payload, "action.payload")
+                    // console.log(action.payload, "action.payload")
                     
 
                 state.isLoading = false,

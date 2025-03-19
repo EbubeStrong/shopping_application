@@ -19,7 +19,7 @@ function CheckAuth({ isAuthenticated, user, children }) {
     } else {
       try {
         const parsedUser = JSON.parse(storedAuth);
-        console.log("Found auth data:", parsedUser);
+        // console.log("Found auth data:", parsedUser);
 
         if (!parsedUser.userName) {
           console.error("userName is missing from localStorage!");
