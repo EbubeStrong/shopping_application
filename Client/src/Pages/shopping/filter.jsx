@@ -29,7 +29,7 @@ function ProductFilter({ filters, handleFilter }) {
                         filters &&
                         Object.keys(filters).length > 0 &&
                         filters[keyItem] &&
-                        filters[keyItem].indexOf(option.id)
+                        filters[keyItem].indexOf(option.id) > -1
                       }
                     />
                     {option.label}
