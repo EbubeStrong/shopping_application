@@ -11,9 +11,10 @@ import { ArrowUpDownIcon } from "lucide-react";
 import { sortOptions } from "@/config";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllFilteredProducts } from "../../../store/shop/product-slice";
+import { fetchAllFilteredProducts, fetchProductDetails } from "../../../store/shop/product-slice";
 import ShoppingProductTile from "./userProduct-tile";
 import {  useSearchParams } from "react-router-dom";
+import ProductDetailsDialog from "@/Pages/shopping/productDetails";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = []
@@ -31,10 +32,11 @@ function createSearchParamsHelper(filterParams) {
 
 function ShoppingListing() {
   const dispatch = useDispatch();
-  const { productList } = useSelector((state) => state.shopProducts);
+  const { productList, productDetails } = useSelector((state) => state.shopProducts);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);  
 
   function handleSort(value) {
     // console.log(value)
@@ -90,7 +92,22 @@ function ShoppingListing() {
   }, [dispatch, sort, filters]);
 
   // console.log(productList, "productListing");
-  console.log(filters, "filters");
+  // console.log(filters, "filters");
+
+
+  // For product Details
+  function handleGetProductDetails(getCurrentProductId) {
+    // console.log(getCurrentProductId)
+    dispatch(fetchProductDetails(getCurrentProductId))
+  }
+
+  useEffect(() => {
+    if(productDetails !== null) {
+      setOpenDetailsDialog(true);
+    }
+  }, [productDetails])
+
+  // console.log(productDetails, "productDetails");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
@@ -143,7 +160,7 @@ function ShoppingListing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {productList && productList.length > 0 ? (
               productList.map((product, index) => (
-                <ShoppingProductTile key={index} product={product} />
+                <ShoppingProductTile key={index} product={product} handleGetProductDetails={handleGetProductDetails} />
               ))
             ) : (
               <p className="text-center text-muted-foreground">
@@ -153,6 +170,13 @@ function ShoppingListing() {
           </div>
         </div>
       </div>
+
+      {/* Product Details Dialog */}
+      <ProductDetailsDialog
+        open={openDetailsDialog}
+        setOpen={setOpenDetailsDialog}
+        productDetails={productDetails}
+      /> 
     </div>
   );
 }
