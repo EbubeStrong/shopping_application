@@ -16,9 +16,14 @@ const CartSchema = new mongoose.Schema({
             quantity: {
                 type: Number,
                 required: true,
-                min: 1,
-                max: 100 
+                min: 1
             }
         }
     ]
-})
+},
+{
+    timestamps: true
+}
+)
+
+module.exports =  mongoose.model('Cart', CartSchema)
