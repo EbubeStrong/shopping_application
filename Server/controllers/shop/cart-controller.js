@@ -92,7 +92,7 @@ const fetchCartItems = async (req, res) => {
       success: true,
       message: "Cart fetched successfully",
       data: {
-        ...cart.doc,
+        ...cart._doc,
         items: populateCartItems,
       },
     });
@@ -107,6 +107,60 @@ const fetchCartItems = async (req, res) => {
 
 const updateCartItemQty = async (req, res) => {
   try {
+    const { userId, productId, quantity } = req.body;
+    // if(!userId || !productId || !quantity <= 0) {
+    if (!userId || !productId || quantity <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide all fields",
+        // message: 'Invalid data provided'
+      });
+    }
+
+    const cart = await Cart.findOne({ userId }).populate({userId});
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart not found",
+      });
+    }
+
+    const findCurrentProductIndex = cart.items.findIndex(item => item.productId.toString() === productId ) 
+
+    if(findCurrentProductIndex === -1){
+      return res.status(404).json({
+        success: false,
+        message: 'Cart Item not present!'
+      })
+    }
+
+    cart.items[findCurrentProductIndex].quantity = quantity
+    await cart.save()
+    await cart.populate({
+      path: 'items.productId',
+      select: "image title price salePrice"
+    })
+
+    const populateCartItems = cart.items.map((item) => {
+      return {
+        productId: item.productId ? item.productId._id : null,
+        Image: item.productId ? item.productId.image : null,
+        title: item.productId ? item.productId.title : 'Product not found',
+        price: item.poductId ? item.productId.price : null,
+        salePrice: item.productId ? item.productId.salePrice : null,
+        quatity: item.quantity,
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Cart updated successfully",
+      data: {
+        ...cart._doc,
+        items: populateCartItems,
+      },
+    });
+
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -118,6 +172,57 @@ const updateCartItemQty = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
   try {
+
+    const { userId, productId } = req.params
+     if (!userId || !productId) {
+       return res.status(400).json({
+         success: false,
+         message: "Please provide all fields",
+         // message: 'Invalid data provided'
+       });
+     }
+
+    const cart = await Cart.findOne({ userId }).populate({
+      path: "items.productId",
+      select: "image title price salePrice",
+    });
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart not found",
+      });
+    }
+
+    cart.items = cart.items.filter(item => item.productId._id.toString() !== productId)
+    await cart.save()
+
+    await Cart.populate({
+      path: "items.productId",
+      select: "image title price salePrice",
+    });
+
+     const populateCartItems = cart.items.map((item) => {
+       return {
+         productId: item.productId ? item.productId._id : null,
+         Image: item.productId ? item.productId.image : null,
+         title: item.productId ? item.productId.title : "Product not found",
+         price: item.poductId ? item.productId.price : null,
+         salePrice: item.productId ? item.productId.salePrice : null,
+         quatity: item.quantity,
+       };
+     });
+
+     res.status(200).json({
+       success: true,
+       message: "Cart updated successfully",
+       data: {
+         ...cart._doc,
+         items: populateCartItems,
+       },
+     });
+
+
   } catch (error) {
     console.log(error);
     res.status(500).json({

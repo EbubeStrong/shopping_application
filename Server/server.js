@@ -7,6 +7,7 @@ const authRouter = require("./routes/auth/auth-routes.js");
 
 const adminProductsRouter = require("./routes/admin/products-routes.js")
 const shopProductsRouter = require("./routes/shop/product-routes.js")
+const shopCartRouter = require("./routes/shop/cart-routes.js")
 
 mongoose
   .connect(
@@ -41,6 +42,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter)
 app.use("/api/admin/products", adminProductsRouter)
 app.use("/api/shop/products", shopProductsRouter)
+app.use("/api/shop/cart", shopCartRouter)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
