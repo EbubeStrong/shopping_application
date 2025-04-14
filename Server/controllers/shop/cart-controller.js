@@ -1,5 +1,5 @@
 const Cart = require("../../models/cart");
-const Product = require("../../models/product");
+const Product = require("../../models/products");
 
 const addToCart = async (req, res) => {
   try {
@@ -207,7 +207,7 @@ const deleteCartItem = async (req, res) => {
          productId: item.productId ? item.productId._id : null,
          Image: item.productId ? item.productId.image : null,
          title: item.productId ? item.productId.title : "Product not found",
-         price: item.poductId ? item.productId.price : null,
+         price: item.productId ? item.productId.price : null,
          salePrice: item.productId ? item.productId.salePrice : null,
          quatity: item.quantity,
        };
