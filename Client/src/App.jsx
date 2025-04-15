@@ -9,18 +9,17 @@ import AdminProducts from "./Pages/admin/products";
 import AdminOrders from "./Pages/admin/orders";
 import AdminFeatures from "./Pages/admin/features";
 import ShoppingLayout from "./Pages/shopping/layout";
-import ShoppingHome from "./components/shopping-view/home";
+import ShoppingHome from "./Pages/shopping/home";
 import NotFound from "./Pages/not-found";
-import ShoppingListing from "./components/shopping-view/listing";
-import ShoppingCheckout from "./components/shopping-view/checkout";
-import ShoppingAccount from "./components/shopping-view/account";
+import ShoppingListing from "./Pages/shopping/listing";
+import ShoppingCheckout from "./Pages/shopping/checkout";
+import ShoppingAccount from "./Pages/shopping/account";
 import CheckAuth from "./components/common/check-auth";
 import UnAuthPage from "./Pages/unauthPage";
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "../store/auth-slice/index";
 import { Skeleton } from "@/components/ui/skeleton";
-
 
 export default function App() {
   // const isAuthenticated = false
@@ -32,18 +31,21 @@ export default function App() {
   //   role : 'admin'
   // }
 
-  const { user, isAuthenticated, isLoading } = useSelector(state => state.auth)
+  const { user, isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+  );
   // console.log(user, isAuthenticated, "userName", "isAuthenticated")
-  
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(checkAuth())
-  }, [dispatch])
 
-  if (isLoading) return (
-    // <Skeleton className="w-[100px] h-[20px] rounded-full" />;
-    <div className="flex justify-center items-center h-screen">
-      {/* <div className="flex items-center space-x-4">
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+  if (isLoading)
+    return (
+      // <Skeleton className="w-[100px] h-[20px] rounded-full" />;
+      <div className="flex justify-center items-center h-screen">
+        {/* <div className="flex items-center space-x-4">
         <Skeleton className="h-12 w-12 rounded-full" />
         <div className="space-y-2">
           <Skeleton className="h-4 w-[250px]" />
@@ -51,15 +53,15 @@ export default function App() {
         </div>
       </div> */}
 
-      <div className="flex flex-col space-y-3">
-        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
+        <div className="flex flex-col space-y-3">
+          <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">

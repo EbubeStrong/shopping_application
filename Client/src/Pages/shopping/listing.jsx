@@ -1,42 +1,52 @@
-import ProductFilter from "@/Pages/shopping/filter";
+import ProductFilter from "@/components/shopping-view/filter";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
+} from "../../components/ui/dropdown-menu";
+import { Button } from "../../components/ui/button";
 import { ArrowUpDownIcon } from "lucide-react";
 import { sortOptions } from "@/config";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllFilteredProducts, fetchProductDetails } from "../../../store/shop/product-slice";
-import ShoppingProductTile from "./userProduct-tile";
-import {  useSearchParams } from "react-router-dom";
-import ProductDetailsDialog from "@/Pages/shopping/productDetails";
+import {
+  fetchAllFilteredProducts,
+  fetchProductDetails,
+} from "../../../store/shop/product-slice";
+import ShoppingProductTile from "../../components/shopping-view/userProduct-tile";
+import { useSearchParams } from "react-router-dom";
+import ProductDetailsDialog from "@/components/shopping-view/productDetails";
+import { addToCart, fetchCartItems } from "../../../store/shop/cart-slice/index";
+import { useToast } from "@/hooks/use-toast";
+
 
 function createSearchParamsHelper(filterParams) {
-  const queryParams = []
+  const queryParams = [];
 
   for (const [key, value] of Object.entries(filterParams)) {
-    if (Array.isArray(value) && value.length > 0 ) {
-      const paramValue = value.join(",")
-      queryParams.push(`${key}=${encodeURIComponent(paramValue)}`)
+    if (Array.isArray(value) && value.length > 0) {
+      const paramValue = value.join(",");
+      queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
     }
   }
 
-  return queryParams.join("&")
+  return queryParams.join("&");
 }
 
-
 function ShoppingListing() {
+    const { toast } = useToast();
+  
   const dispatch = useDispatch();
-  const { productList, productDetails } = useSelector((state) => state.shopProducts);
+  const { productList, productDetails } = useSelector(
+    (state) => state.shopProducts
+  );
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);  
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const { user } = useSelector((state) => state.auth);
 
   function handleSort(value) {
     // console.log(value)
@@ -71,41 +81,59 @@ function ShoppingListing() {
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
+  // Add to cart functionality
+  function handleAddToCart(getCurrentProductId) {
+    // console.log(getCurrentProductId)
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) =>{
+      if(data?.payload?.success){
+        dispatch(fetchCartItems(user?.id))
+        toast({
+          title: data?.payload?.message,
+        });
+      }}
+    )
+  }
+
   useEffect(() => {
     setSort("price-low-to-high");
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
   }, []);
 
-
   // For Params
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
-      const createQueryString = createSearchParamsHelper(filters)
+      const createQueryString = createSearchParamsHelper(filters);
       setSearchParams(new URLSearchParams(createQueryString));
     }
-  }, [filters])
-
+  }, [filters]);
 
   useEffect(() => {
-    if(filters !== null && sort !== null)
-    dispatch(fetchAllFilteredProducts({filterParams: filters,  sortParams: sort}));
+    if (filters !== null && sort !== null)
+      dispatch(
+        fetchAllFilteredProducts({ filterParams: filters, sortParams: sort })
+      );
   }, [dispatch, sort, filters]);
 
   // console.log(productList, "productListing");
   // console.log(filters, "filters");
 
-
   // For product Details
   function handleGetProductDetails(getCurrentProductId) {
     // console.log(getCurrentProductId)
-    dispatch(fetchProductDetails(getCurrentProductId))
+    dispatch(fetchProductDetails(getCurrentProductId));
   }
 
   useEffect(() => {
-    if(productDetails !== null) {
+    if (productDetails !== null) {
       setOpenDetailsDialog(true);
     }
-  }, [productDetails])
+  }, [productDetails]);
 
   // console.log(productDetails, "productDetails");
 
@@ -160,7 +188,12 @@ function ShoppingListing() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {productList && productList.length > 0 ? (
               productList.map((product, index) => (
-                <ShoppingProductTile key={index} product={product} handleGetProductDetails={handleGetProductDetails} />
+                <ShoppingProductTile
+                  key={index}
+                  product={product}
+                  handleGetProductDetails={handleGetProductDetails}
+                  handleAddToCart={handleAddToCart}
+                />
               ))
             ) : (
               <p className="text-center text-muted-foreground">
@@ -176,7 +209,7 @@ function ShoppingListing() {
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
-      /> 
+      />
     </div>
   );
 }

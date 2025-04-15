@@ -1,4 +1,4 @@
-import { Button } from "../../components/ui/button";
+import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import {
   House,
@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import UserCartWrapper from "@/components/shopping-view/cart-wrapper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchCartItems } from "../../../store/shop/cart-slice/index";
 
 // import { logoutUser } from "../../../store/auth-slice";
 
@@ -50,7 +51,11 @@ function HeaderRightContent() {
   const { user } = useSelector((state) => state.auth);
   // console.log(user, "userName")
 
-  const [openCartSheet, setOpenCartSheet] = useState(false)
+  const { cartItems } = useSelector((state) => state.shopCart);
+  console.log(cartItems, "cartItems")
+
+
+  const [openCartSheet, setOpenCartSheet] = useState(false);
 
   const dispatch = useDispatch();
   const { toast } = useToast();
@@ -74,14 +79,28 @@ function HeaderRightContent() {
     });
   }
 
+  useEffect(() => {
+    dispatch(fetchCartItems(user?.id))
+  }, [dispatch])
+
   return (
     <div className="flex lg:items-center lg:flex-row gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-        <Button onClick={() => setOpenCartSheet(true)} variant="outline" size="icon">
+        <Button
+          onClick={() => setOpenCartSheet(true)}
+          variant="outline"
+          size="icon"
+        >
           <ShoppingCart className="w-6 h-6" />
           <span className="sr-only">User cart</span>
         </Button>
-        <UserCartWrapper />
+        <UserCartWrapper
+          cartItems={
+            cartItems && cartItems[0]?.data?.items?.length > 0
+              ? cartItems[0].data.items
+              : []
+          }
+        />
       </Sheet>
 
       <DropdownMenu>
