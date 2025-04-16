@@ -1,4 +1,4 @@
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 
 function UserCartItemsContent({ cartItem }) {
@@ -31,6 +31,13 @@ function UserCartItemsContent({ cartItem }) {
             <span className="sr-only">Decrease</span>
           </Button>
         </div>
+      </div>
+
+      <div className="flex flex-col items-end">
+        <p className="font-semibold">
+          ₦{((cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) * cartItem?.quantity).toFixed(2)}
+        </p>
+        <Trash className="cursor-pointer mt-1" size={20}/>
       </div>
     </div>
   );

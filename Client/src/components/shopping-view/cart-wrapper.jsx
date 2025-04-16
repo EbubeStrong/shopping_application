@@ -5,13 +5,15 @@ import UserCartItemsContent from "./cart-items-content";
 function UserCartWrapper({ cartItems }) {
     // console.log(cartItems, "cartItems in cart wrapper")
   return (
-    <SheetContent>
+    <SheetContent className="overflow-y-auto">
       <SheetHeader>
         <SheetTitle>Your Cart</SheetTitle>
       </SheetHeader>
       <div className="mt-8 space-y-4">
         {cartItems && cartItems.length > 0 ? (
-          cartItems.map((item, index) => (
+                  cartItems.map((item, index) => (
+    // console.log(item, "cartItem in cart content")
+              
             <UserCartItemsContent key={index} cartItem={item} />
           ))
         ) : (

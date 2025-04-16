@@ -69,7 +69,9 @@ const shoppingCart = createSlice({
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.cartItems.push(action.payload);
+        // state.cartItems.push(action.payload);
+          state.cartItems = action.payload.data;
+
       })
       .addCase(addToCart.rejected, (state) => {
         state.isLoading = false;
@@ -82,7 +84,10 @@ const shoppingCart = createSlice({
       })
       .addCase(fetchCartItems.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.cartItems.push(action.payload);
+        //  console.log("Fetched cart payload:", action.payload);
+        // error:
+          //   state.cartItems.push(action.payload)
+          state.cartItems = action.payload.data
       })
       .addCase(fetchCartItems.rejected, (state) => {
         state.isLoading = false;
@@ -95,7 +100,9 @@ const shoppingCart = createSlice({
       })
       .addCase(updateCartQuantity.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.cartItems.push(action.payload);
+        // state.cartItems.push(action.payload);
+          state.cartItems = action.payload.data;
+
       })
       .addCase(updateCartQuantity.rejected, (state) => {
         state.isLoading = false;
@@ -108,7 +115,9 @@ const shoppingCart = createSlice({
       })
       .addCase(deleteCartItem.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.cartItems.push(action.payload);
+          // state.cartItems.push(action.payload);
+          state.cartItems = action.payload.data;
+          
       })
       .addCase(deleteCartItem.rejected, (state) => {
         state.isLoading = false;

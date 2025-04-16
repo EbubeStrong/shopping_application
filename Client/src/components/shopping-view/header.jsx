@@ -52,8 +52,7 @@ function HeaderRightContent() {
   // console.log(user, "userName")
 
   const { cartItems } = useSelector((state) => state.shopCart);
-  console.log(cartItems, "cartItems")
-
+  // console.log(cartItems, "cartItems");
 
   const [openCartSheet, setOpenCartSheet] = useState(false);
 
@@ -80,8 +79,8 @@ function HeaderRightContent() {
   }
 
   useEffect(() => {
-    dispatch(fetchCartItems(user?.id))
-  }, [dispatch])
+    dispatch(fetchCartItems(user?.id));
+  }, [dispatch]);
 
   return (
     <div className="flex lg:items-center lg:flex-row gap-4">
@@ -96,8 +95,8 @@ function HeaderRightContent() {
         </Button>
         <UserCartWrapper
           cartItems={
-            cartItems && cartItems[0]?.data?.items?.length > 0
-              ? cartItems[0].data.items
+            cartItems && cartItems.items && cartItems.items.length > 0
+              ? cartItems.items
               : []
           }
         />

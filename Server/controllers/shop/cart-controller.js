@@ -84,7 +84,7 @@ const fetchCartItems = async (req, res) => {
         title: item.productId.title,
         price: item.productId.price,
         salePrice: item.productId.salePrice,
-        quatity: item.quantity,
+        quantity: item.quantity,
       };
     });
 
@@ -148,7 +148,7 @@ const updateCartItemQty = async (req, res) => {
         title: item.productId ? item.productId.title : 'Product not found',
         price: item.productId ? item.productId.price : null,
         salePrice: item.productId ? item.productId.salePrice : null,
-        quatity: item.quantity,
+        quantity: item.quantity,
       };
     });
 
@@ -209,7 +209,7 @@ const deleteCartItem = async (req, res) => {
          title: item.productId ? item.productId.title : "Product not found",
          price: item.productId ? item.productId.price : null,
          salePrice: item.productId ? item.productId.salePrice : null,
-         quatity: item.quantity,
+         quantity: item.quantity,
        };
      });
 

@@ -83,7 +83,7 @@ function ShoppingListing() {
 
   // Add to cart functionality
   function handleAddToCart(getCurrentProductId) {
-    // console.log(getCurrentProductId)
+    // console.log(getCurrentProductId, "get current Product Id")
     dispatch(
       addToCart({
         userId: user?.id,
