@@ -35,7 +35,7 @@ export const fetchCartItems = createAsyncThunk(
 
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
-  async (userId, productId) => {
+  async ({userId, productId}) => {
     const response = await axios.delete(
       `http://localhost:3000/api/shop/cart/${userId}/${productId}`
     );
@@ -45,7 +45,7 @@ export const deleteCartItem = createAsyncThunk(
 
 export const updateCartQuantity = createAsyncThunk(
   "cart/updateCartQuantity",
-  async (userId, productId, quantity) => {
+  async ({userId, productId, quantity}) => {
     const response = await axios.put(
       "http://localhost:3000/api/shop/cart/update-cart",
       {
@@ -101,8 +101,8 @@ const shoppingCart = createSlice({
       .addCase(updateCartQuantity.fulfilled, (state, action) => {
         state.isLoading = false;
         // state.cartItems.push(action.payload);
-          state.cartItems = action.payload.data;
-
+        //  console.log("update cart payload:", action.payload);
+        state.cartItems = action.payload.data;
       })
       .addCase(updateCartQuantity.rejected, (state) => {
         state.isLoading = false;

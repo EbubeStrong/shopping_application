@@ -18,9 +18,11 @@ import {
 import ShoppingProductTile from "../../components/shopping-view/userProduct-tile";
 import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/shopping-view/productDetails";
-import { addToCart, fetchCartItems } from "../../../store/shop/cart-slice/index";
+import {
+  addToCart,
+  fetchCartItems,
+} from "../../../store/shop/cart-slice/index";
 import { useToast } from "@/hooks/use-toast";
-
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
@@ -36,8 +38,8 @@ function createSearchParamsHelper(filterParams) {
 }
 
 function ShoppingListing() {
-    const { toast } = useToast();
-  
+  const { toast } = useToast();
+
   const dispatch = useDispatch();
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
@@ -81,6 +83,8 @@ function ShoppingListing() {
     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
   }
 
+
+
   // Add to cart functionality
   function handleAddToCart(getCurrentProductId) {
     // console.log(getCurrentProductId, "get current Product Id")
@@ -90,20 +94,23 @@ function ShoppingListing() {
         productId: getCurrentProductId,
         quantity: 1,
       })
-    ).then((data) =>{
-      if(data?.payload?.success){
-        dispatch(fetchCartItems(user?.id))
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
         toast({
           title: data?.payload?.message,
         });
-      }}
-    )
+      }
+    });
   }
 
+
+  // sorting useEffect
   useEffect(() => {
     setSort("price-low-to-high");
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
   }, []);
+
 
   // For Params
   useEffect(() => {
@@ -113,6 +120,8 @@ function ShoppingListing() {
     }
   }, [filters]);
 
+  
+  //npt filters and sorting UseEffect
   useEffect(() => {
     if (filters !== null && sort !== null)
       dispatch(
@@ -123,12 +132,16 @@ function ShoppingListing() {
   // console.log(productList, "productListing");
   // console.log(filters, "filters");
 
+
+
   // For product Details
   function handleGetProductDetails(getCurrentProductId) {
     // console.log(getCurrentProductId)
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
+
+  // For product details dialog
   useEffect(() => {
     if (productDetails !== null) {
       setOpenDetailsDialog(true);

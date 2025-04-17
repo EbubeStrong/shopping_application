@@ -112,12 +112,13 @@ const updateCartItemQty = async (req, res) => {
     if (!userId || !productId || quantity <= 0) {
       return res.status(400).json({
         success: false,
-        message: "Please provide all fields",
-        // message: 'Invalid data provided'
+        // message: "Please provide all fields",
+        message: "Invalid data provided",
       });
     }
 
-    const cart = await Cart.findOne({ userId }).populate({userId});
+    // const cart = await Cart.findOne({ userId }).populate({userId});
+    const cart = await Cart.findOne({ userId });
     if (!cart) {
       return res.status(404).json({
         success: false,
@@ -125,29 +126,33 @@ const updateCartItemQty = async (req, res) => {
       });
     }
 
-    const findCurrentProductIndex = cart.items.findIndex(item => item.productId.toString() === productId ) 
+    const findCurrentProductIndex = cart.items.findIndex(
+      (item) => item.productId.toString() === productId
+    );
 
-    if(findCurrentProductIndex === -1){
+    if (findCurrentProductIndex === -1) {
       return res.status(404).json({
         success: false,
-        message: 'Cart Item not present!'
-      })
+        message: "Cart item not present!",
+      });
     }
 
-    cart.items[findCurrentProductIndex].quantity = quantity
-    await cart.save()
+    cart.items[findCurrentProductIndex].quantity = quantity;
+
+    await cart.save();
+
     await cart.populate({
-      path: 'items.productId',
-      select: "image title price salePrice"
-    })
+      path: "items.productId",
+      // select: "image title price salePrice"
+    });
 
     const populateCartItems = cart.items.map((item) => {
       return {
-        productId: item.productId ? item.productId._id : null,
-        Image: item.productId ? item.productId.image : null,
-        title: item.productId ? item.productId.title : 'Product not found',
-        price: item.productId ? item.productId.price : null,
-        salePrice: item.productId ? item.productId.salePrice : null,
+        productId: item.productId?._id || null,
+        Image: item.productId?.image || null,
+        title: item.productId?.title || "Product added not found",
+        price: item.productId?.price || null,
+        salePrice: item.productId?.salePrice || null,
         quantity: item.quantity,
       };
     });
@@ -160,7 +165,6 @@ const updateCartItemQty = async (req, res) => {
         items: populateCartItems,
       },
     });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -172,15 +176,14 @@ const updateCartItemQty = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
   try {
-
-    const { userId, productId } = req.params
-     if (!userId || !productId) {
-       return res.status(400).json({
-         success: false,
-         message: "Please provide all fields",
-         // message: 'Invalid data provided'
-       });
-     }
+    const { userId, productId } = req.params;
+    if (!userId || !productId) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide all fields",
+        // message: 'Invalid data provided'
+      });
+    }
 
     const cart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
@@ -194,35 +197,36 @@ const deleteCartItem = async (req, res) => {
       });
     }
 
-    cart.items = cart.items.filter(item => item.productId._id.toString() !== productId)
-    await cart.save()
+    cart.items = cart.items.filter(
+      (item) => item.productId._id.toString() !== productId
+    );
 
-    await Cart.populate({
+    await cart.save();
+
+    await cart.populate({
       path: "items.productId",
       select: "image title price salePrice",
     });
 
-     const populateCartItems = cart.items.map((item) => {
-       return {
-         productId: item.productId ? item.productId._id : null,
-         Image: item.productId ? item.productId.image : null,
-         title: item.productId ? item.productId.title : "Product not found",
-         price: item.productId ? item.productId.price : null,
-         salePrice: item.productId ? item.productId.salePrice : null,
-         quantity: item.quantity,
-       };
-     });
+    const populateCartItems = cart.items.map((item) => {
+      return {
+        productId: item.productId?._id || null,
+        Image: item.productId?.image || null,
+        title: item.productId?.title || "Product added not found",
+        price: item.productId?.price || null,
+        salePrice: item.productId?.salePrice || null,
+        quantity: item.quantity,
+      };
+    });
 
-     res.status(200).json({
-       success: true,
-       message: "Cart updated successfully",
-       data: {
-         ...cart._doc,
-         items: populateCartItems,
-       },
-     });
-
-
+    res.status(200).json({
+      success: true,
+      message: "Cart updated successfully",
+      data: {
+        ...cart._doc,
+        items: populateCartItems,
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
