@@ -80,7 +80,7 @@ const fetchCartItems = async (req, res) => {
     const populateCartItems = validItems.map((item) => {
       return {
         productId: item.productId._id,
-        Image: item.productId.image,
+        image: item.productId.image,
         title: item.productId.title,
         price: item.productId.price,
         salePrice: item.productId.salePrice,
@@ -149,7 +149,7 @@ const updateCartItemQty = async (req, res) => {
     const populateCartItems = cart.items.map((item) => {
       return {
         productId: item.productId?._id || null,
-        Image: item.productId?.image || null,
+        image: item.productId?.image || null,
         title: item.productId?.title || "Product added not found",
         price: item.productId?.price || null,
         salePrice: item.productId?.salePrice || null,
@@ -211,7 +211,7 @@ const deleteCartItem = async (req, res) => {
     const populateCartItems = cart.items.map((item) => {
       return {
         productId: item.productId?._id || null,
-        Image: item.productId?.image || null,
+        image: item.productId?.image || null,
         title: item.productId?.title || "Product added not found",
         price: item.productId?.price || null,
         salePrice: item.productId?.salePrice || null,
