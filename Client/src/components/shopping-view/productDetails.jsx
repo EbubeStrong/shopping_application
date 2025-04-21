@@ -5,11 +5,21 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { StarIcon } from "lucide-react";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setProductDetails } from "../../../store/shop/product-slice";
 
 function ProductDetailsDialog({ open, setOpen, productDetails, handleAddToCart }) {
+
+  const dispatch = useDispatch();
+
+  function handleDialogClose() {
+    setOpen(false);
+    dispatch(setProductDetails());
+  }
+
   return (
     <div>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={handleDialogClose}>
         <DialogTitle className="text-2xl font-bold">
           Product Details
         </DialogTitle>
