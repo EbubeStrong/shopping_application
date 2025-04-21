@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { StarIcon } from "lucide-react";
 import React from "react";
 
-function ProductDetailsDialog({ open, setOpen, productDetails }) {
+function ProductDetailsDialog({ open, setOpen, productDetails, handleAddToCart }) {
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -61,7 +61,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             </div>
 
             <div className="mt-5 mb-5">
-              <Button className="w-full">Add to Cart</Button>
+              <Button className="w-full" onClick={() => handleAddToCart(productDetails?._id)}>Add to Cart</Button>
             </div>
 
             <Separator />
