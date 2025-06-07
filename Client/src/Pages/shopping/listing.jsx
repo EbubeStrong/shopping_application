@@ -24,6 +24,7 @@ import {
 } from "../../../store/shop/cart-slice/index";
 import { useToast } from "@/hooks/use-toast";
 
+
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
 
@@ -56,6 +57,7 @@ function ShoppingListing() {
   }
 
   function handleFilter(getSectionId, getCurrentOption) {
+    
     let cpyFilters = { ...filters };
 
     // console.log(cpyFilters);
@@ -121,7 +123,7 @@ function ShoppingListing() {
   }, [filters]);
 
   
-  //npt filters and sorting UseEffect
+  //not filters and sorting UseEffect
   useEffect(() => {
     if (filters !== null && sort !== null)
       dispatch(
@@ -151,7 +153,7 @@ function ShoppingListing() {
   // console.log(productDetails, "productDetails");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
+    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6 ">
       <ProductFilter filters={filters} handleFilter={handleFilter} />
 
       <div className="bg-background w-full rounded-lg shadow-sm h-[calc(100vh-100px)] flex flex-col">
