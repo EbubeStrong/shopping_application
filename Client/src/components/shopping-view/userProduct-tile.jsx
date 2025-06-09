@@ -6,11 +6,12 @@ function ShoppingProductTile({ product, handleGetProductDetails, handleAddToCart
   return (
     <Card className="w-full max-w-sm mx-auto">
       <div onClick={() => handleGetProductDetails(product?._id)}>
-        <div className="relative">
+        <div className="relative overflow-hidden rounded-t-lg">
           <img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[300px] object-cover rounded-t-lg"
+            className="w-full h-[300px] object-cover transform transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer"
+            loading="lazy"
           />
           {product?.salePrice > 0 ? (
             <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white">
