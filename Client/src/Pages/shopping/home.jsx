@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllFilteredProducts } from "../../../store/shop/product-slice";
 import ShoppingProductTile from "@/components/shopping-view/userProduct-tile";
+import { useNavigate } from "react-router-dom";
 
 // Categories heading with icons
 const categoriesHeadings = [
@@ -37,6 +38,8 @@ const brands = [
 ];
 
 function ShoppingHome() {
+  const navigate = useNavigate();
+
   // State to manage the current slide index
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -68,6 +71,24 @@ function ShoppingHome() {
   }, [dispatch]);
 
   // console.log(productList, productList);
+
+
+
+  // Function to handle navigation to the listing page with category or brand
+  const handleNavigateToListingPage = (getCurrentItem, section) => {
+    sessionStorage.removeItem("filters")
+    const currentFilter = {
+      [section]: [getCurrentItem.id],
+    }
+
+    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+    navigate("/shopping/listing", {
+      state: {
+        filterParams: currentFilter,
+        sortParams: "price-low-to-high",
+      },
+    });
+  };
 
   return (
     <div className="pt-[4rem] flex flex-col min-h-screen">
@@ -125,6 +146,7 @@ function ShoppingHome() {
         </Button>
       </div>
 
+      {/* Shop by category Section */} 
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-40">
           <h2 className="text-3xl font-bold text-center mb-">
@@ -135,6 +157,7 @@ function ShoppingHome() {
               const IconComponent = category.icon;
               return (
                 <div
+                onClick={() => handleNavigateToListingPage(category, "category")}
                   key={category.id}
                   className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300"
                 >
@@ -147,6 +170,7 @@ function ShoppingHome() {
         </div>
       </section>
 
+      {/* Shop by brand */}
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-40">
           <h2 className="text-3xl font-bold text-center mb-6">Shop by Brand</h2>
