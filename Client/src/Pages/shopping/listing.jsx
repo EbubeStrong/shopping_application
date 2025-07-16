@@ -153,10 +153,11 @@ function ShoppingListing() {
   // console.log(productDetails, "productDetails");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6 ">
+    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6 min-h-screen">
+      
       <ProductFilter filters={filters} handleFilter={handleFilter} />
 
-      <div className="bg-background w-full rounded-lg shadow-sm h-[calc(100vh-100px)] flex flex-col">
+      <div className="bg-background w-full rounded-lg shadow-sm h-[calc(100vh-100px)] flex flex-col pb-[3rem]">
         <div className="p-4 sticky top-0 border-b flex items-center justify-between bg-background z-10">
           <h2 className="text-lg font-extra-bold">All Products</h2>
           <div className="flex items-center gap-3">

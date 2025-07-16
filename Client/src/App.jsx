@@ -64,7 +64,7 @@ export default function App() {
     );
 
   return (
-    <div className="flex flex-col overflow-hidden bg-white">
+    <div className="flex flex-col">
       <Routes>
         {/* <Route path="/" element={ } /> */}
         <Route

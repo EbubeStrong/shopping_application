@@ -91,7 +91,7 @@ function ShoppingHome() {
   };
 
   return (
-    <div className="pt-[4rem] flex flex-col min-h-screen">
+    <div className="pt-16 flex flex-col min-h-screen">
       <div className="relative w-full h-[500px] overflow-hidden">
         {slides.map((slide, index) => (
           <div
