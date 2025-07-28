@@ -8,6 +8,7 @@ import {
   Menu,
   ShoppingCart,
   UserCog,
+  X,
 } from "lucide-react";
 import { logoutUser } from "../../../store/auth-slice";
 import { useToast } from "@/hooks/use-toast";
@@ -172,27 +173,49 @@ function ShoppingHeader() {
             Logout
           </Button> */}
 
-        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-          <SheetTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="lg:hidden cursor-pointer"
-              onClick={() => setIsSheetOpen(true)}
-            >
-              <Menu className="h-6 w-6 " />
-              <span className="sr-only">Toggle header menu</span>
-            </Button>
-          </SheetTrigger>
-
-          <SheetContent
-            side="left"
-            className="w-full max-w-xs bg-white"
+        {/* Custom Mobile Menu */}
+        <div className="lg:hidden">
+          <Button
+            variant="outline"
+            size="icon"
+            className="cursor-pointer"
+            onClick={() => setIsSheetOpen(!isSheetOpen)}
           >
-            <MenuItems />
-            <HeaderRightContent />
-          </SheetContent>
-        </Sheet>
+            <Menu className="h-6 w-6 " />
+            <span className="sr-only">Toggle header menu</span>
+          </Button>
+
+          {/* Overlay */}
+          {isSheetOpen && (
+            <div 
+              className="fixed inset-0 bg-black/50 z-40"
+              onClick={() => setIsSheetOpen(false)}
+            />
+          )}
+
+          {/* Mobile Menu */}
+          <div 
+            className={`fixed top-0 left-0 h-full w-80 bg-white z-50 transform transition-transform duration-300 ease-in-out ${
+              isSheetOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-semibold">Menu</h2>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsSheetOpen(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <MenuItems />
+              <HeaderRightContent />
+            </div>
+          </div>
+        </div>
+
 
         <div className="hidden lg:block">
           <MenuItems />
