@@ -104,33 +104,45 @@ function HeaderRightContent() {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="bg-black">
+          <Avatar className="bg-black cursor-pointer">
             <AvatarFallback className="bg-black cursor-pointer text-white font-extrabold">
               {user?.userName[0]?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent side="right" className="w-56 translate-y-6">
+        <DropdownMenuContent
+          side="right"
+          className="w-56 translate-y-6 bg-white"
+        >
           <DropdownMenuLabel>
             Logged in as{" "}
             {user?.userName.charAt(0).toUpperCase() + user?.userName.slice(1)}
           </DropdownMenuLabel>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+          <DropdownMenuItem
+            onClick={() => navigate("/shop/account")}
+            className="cursor-pointer"
+          >
             <UserCog className="mr-2 h-4 w-4" />
             Account
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/listing")}>
+          <DropdownMenuItem
+            onClick={() => navigate("/shop/listing")}
+            className="cursor-pointer"
+          >
             <LayoutList className="mr-2 h-4 w-4" />
             Listing
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
+          <DropdownMenuItem
+            onClick={handleLogout}
+            className="cursor-pointer hover:text-red-500"
+          >
             <LogOutIcon className="mr-2 h-4 w-4" /> Logout
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -141,6 +153,7 @@ function HeaderRightContent() {
 
 function ShoppingHeader() {
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white px-4 py-3 bg-background ">
@@ -159,15 +172,23 @@ function ShoppingHeader() {
             Logout
           </Button> */}
 
-        <Sheet>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="lg:hidden">
-              <Menu className="h-6 w-6" />
+            <Button
+              variant="outline"
+              size="icon"
+              className="lg:hidden cursor-pointer"
+              onClick={() => setIsSheetOpen(true)}
+            >
+              <Menu className="h-6 w-6 " />
               <span className="sr-only">Toggle header menu</span>
             </Button>
           </SheetTrigger>
 
-          <SheetContent side="left" className="w-full max-w-xs">
+          <SheetContent
+            side="left"
+            className="w-full max-w-xs bg-white"
+          >
             <MenuItems />
             <HeaderRightContent />
           </SheetContent>

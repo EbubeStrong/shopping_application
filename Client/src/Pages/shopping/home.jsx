@@ -1,8 +1,13 @@
-import bannerOne from "../../assets/Images/shoeOne.jpg";
-import bannerTwo from "../../assets/Images/shoeTwo.jpg";
-import bannerThree from "../../assets/Images/shoeThree.jpg";
-import bannerFour from "../../assets/Images/shoeFour.jpg";
+import bannerOne from "../../assets/Images/pic-1.png";
+import bannerTwo from "../../assets/Images/pic-2.png";
+import bannerThree from "../../assets/Images/pic-3.png";
+import bannerFour from "../../assets/Images/pic-4.png";
 import levisImage from "../../assets/Images/levisImage.jpg";
+// import bannerOne from "../../assets/Images/shoeOne.jpg";
+// import bannerTwo from "../../assets/Images/shoeTwo.jpg";
+// import bannerThree from "../../assets/Images/shoeThree.jpg";
+// import bannerFour from "../../assets/Images/shoeFour.jpg";
+// import levisImage from "../../assets/Images/levisImage.jpg";
 import { Button } from "@/components/ui/button";
 import {
   BabyIcon,
@@ -91,30 +96,32 @@ function ShoppingHome() {
   };
 
   return (
-    <div className="pt-16 flex flex-col min-h-screen">
-      <div className="relative w-full h-[500px] overflow-hidden">
+    <div className="flex flex-col min-h-screen">
+      <div className="relative w-full h-[500px] md:h-[800px] lg:h-[800px] pb-[2%]  overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={index}
             className={`${
               index === currentSlide ? "opacity-100" : "opacity-0"
-            } absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out`}
+            } absolute inset-0 w-full h-[100vh] transition-opacity duration-1000 ease-in-out`}
           >
             {/* Blurred background image */}
             <img
               src={slide}
               alt=""
               aria-hidden="true"
-              className="absolute inset-0 w-full h-full object-cover filter blur-[12px] scale-110 animate-pan"
+              className="absolute inset-0 w-full h-full object-cover filter blur-[100px] scale-110 animate-pan"
             />
 
-            {/* Foreground centered image */}
-            <div className="relative flex items-center justify-center w-full h-full">
-              <img
-                src={slide}
-                alt={`Slide ${index + 1}`}
-                className="max-h-full object-contain z-10"
-              />
+            {/* Foreground centered image with glass background */}
+            <div className="relative flex justify-center items-center w-full h-full">
+              <div className="w-[60%] h-[50%] md:h-[85%] absolute top-[8%] bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl flex items-center justify-center">
+                <img
+                  src={slide}
+                  alt={`Slide ${index + 1}`}
+                  className="w-[90%] h-[100%] md:h-[90%] object-contain z-10"
+                />
+              </div>
             </div>
           </div>
         ))}
