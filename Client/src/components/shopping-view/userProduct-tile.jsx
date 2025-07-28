@@ -4,9 +4,9 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 
 function ShoppingProductTile({ product, handleGetProductDetails, handleAddToCart }) {
   return (
-    <Card className="w-full max-w-sm mx-auto">
+    <Card className="w-[100%] max-w-sm mx-auto">
       <div onClick={() => handleGetProductDetails(product?._id)}>
-        <div className="relative overflow-hidden rounded-t-lg">
+        <div className="w-full relative overflow-hidden rounded-t-lg">
           <img
             src={product?.image}
             alt={product?.title}
