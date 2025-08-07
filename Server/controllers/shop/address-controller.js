@@ -123,7 +123,7 @@ const deleteAddress = async (req, res) => {
 
     res.status(200).json({
         success: true,
-        message: "Address is deleted Successfully"
+        message: "Address deleted Successfully"
     })
 
   } catch (e) {

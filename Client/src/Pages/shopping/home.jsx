@@ -57,7 +57,7 @@ function ShoppingHome() {
 
   // Array of banner images
   const slides = [bannerOne, bannerTwo, bannerThree, bannerFour];
-  const slidesBg = [bannerOneBg, bannerTwoBg, bannerThreeBg, bannerFourBg];
+  const slidesBg = [bannerOneBg, bannerTwoBg, bannerThreeBg, bannerFourBg]; 
 
   // Effect to change slides automatically every 3 seconds and to handle slide transitions
   useEffect(() => {
@@ -69,7 +69,7 @@ function ShoppingHome() {
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, [slides.length, slidesBg.length]);
 
-  // Fetching fitered products
+  // Fetching filtered products
   useEffect(() => {
     dispatch(
       fetchAllFilteredProducts({

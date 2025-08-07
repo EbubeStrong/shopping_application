@@ -12,7 +12,7 @@ const initialState = {
   password: "",
 };
 
-const AuthRegister = () => {
+const   AuthRegister = () => {
   const [formData, setFormData] = useState(initialState);
   const {toast} = useToast()
 

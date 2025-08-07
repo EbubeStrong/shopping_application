@@ -26,7 +26,7 @@ const AuthLogin = () => {
   e.preventDefault();
   
   try {
-    const data = await dispatch(loginUser(formData));
+    const data = await dispatch(loginUser(formData)).unwrap();
 
     if (data?.payload?.success) {
       toast({
