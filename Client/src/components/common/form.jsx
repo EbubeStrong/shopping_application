@@ -38,7 +38,7 @@ function CommonForm({
         element = (
           <Textarea
             name={getControlItem.name}
-            // type={getControlItem.type}
+            type={getControlItem.type}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
             value={value}
@@ -80,9 +80,11 @@ function CommonForm({
         element = (
           <Textarea
             name={getControlItem.name}
-            // type={getControlItem.type}
+            type={getControlItem.type}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
+            // rows={getControlItem.rows}
+            // cols={getControlItem.cols}
           />
         );
         break;
@@ -93,14 +95,14 @@ function CommonForm({
     <form onSubmit={onSubmit}>
       <div className="flex flex-col gap-3">
         {formControls.map((controlItem) => (
-          <div className="grid w-full gap-1 5" key={controlItem.name}>
-            <label htmlFor="userName">{controlItem.label}</label>
+          <div className="grid w-full gap-1 " key={controlItem.name}>
+            <label htmlFor={controlItem.label}>{controlItem.label}</label>
             {renderInputsByComponentType(controlItem)}
           </div>
         ))}
       </div>
 
-      <Button disabled={isBtnDisabled} type="submit" className="mt-6 w-full">
+      <Button disabled={isBtnDisabled} type="submit" className="mt-6 w-full bg-black text-white">
         {buttonText || "Submit"}
       </Button>
     </form>

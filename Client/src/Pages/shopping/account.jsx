@@ -12,6 +12,9 @@ import palmsFour from "../../assets/Images/palms4.jpg";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Orders from "@/components/shopping-view/orders";
+import Address from "@/components/shopping-view/address";
 
 function ShoppingAccount() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -44,11 +47,7 @@ function ShoppingAccount() {
   }, [slides.length, slidesBg.length]);
 
   return (
-    <>
-      {/* <div className="relative h-[350px] w-full overflow-hidden">
-        <img src="" alt="" className="h-full w-full object-center " />
-      </div> */}
-
+    <div className="flex flex-col">
       <div className="relative w-full h-[300px] md:h-[400px] lg:h-[550px] overflow-hidden">
         {slides.map((slide, index) => (
           <div
@@ -68,9 +67,9 @@ function ShoppingAccount() {
                 src={slidesBg[index]}
                 alt=""
                 aria-hidden="true"
-                className="w-full h-full object-cover filter blur-[25px] scale-110 animate-pan"
+                className="w-full h-full object-cover filter blur-[15px] scale-110 animate-pan"
               />
-              <div className="absolute inset-0 bg-black/30 z-10"></div>
+              <div className="absolute inset-0 bg-black/40 z-10"></div>
             </div>
 
             {/* Foreground centered image with glass background */}
@@ -79,14 +78,34 @@ function ShoppingAccount() {
                 <img
                   src={slide}
                   alt={`Slide ${index + 1}`}
-                  className="w-full h-[100%]  object-contain z-10"
+                  className="w-full h-[100%]  object-contain object-center z-10"
                 />
               </div>
             </div>
           </div>
         ))}
       </div>
-    </>
+
+      <div className="container mx-auto grid grid-cols-1 gap-8 py-8">
+        <div className="flex flex-col rounded-lg border bg-background p-6 shadow-sm">
+          <Tabs defaultValue="orders">
+            <TabsList>
+              <TabsTrigger value="orders">Orders</TabsTrigger>
+              <TabsTrigger value="address">Address</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="orders">
+              <Orders />
+            </TabsContent>
+             
+            <TabsContent value="address">
+              <Address />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+
+    </div>
   );
 }
 
