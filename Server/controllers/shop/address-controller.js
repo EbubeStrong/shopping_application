@@ -37,6 +37,7 @@ const addAddress = async (req, res) => {
 const fetchAllAddress = async (req, res) => {
   try {
     const { userId } = req.params;
+    
     if (!userId) {
       return res.status(400).json({
         success: false,
@@ -44,7 +45,7 @@ const fetchAllAddress = async (req, res) => {
       });
     }
 
-    const address = await Address.find({ userId });
+    const addressList = await Address.find({ userId });
 
     res.status(200).json({
       success: true,

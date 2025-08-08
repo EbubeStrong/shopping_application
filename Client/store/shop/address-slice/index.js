@@ -52,11 +52,11 @@ const addressSlice = createSlice({
         .addCase(addNewAddresses.fulfilled, (state, action) => {
           console.log(action);
           state.isLoading = false;
-          state.addressList = action.payload.data;
+          // state.addressList = action.payload.data;
         })
         .addCase(addNewAddresses.rejected, (state) => {
           state.isLoading = false;
-          state.addressList = [];
+          // state.addressList = [];
         })
       
         // fetchAllAddresses
