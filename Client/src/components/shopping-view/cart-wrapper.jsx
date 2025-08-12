@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 
 function UserCartWrapper({ cartItems }) {
   // console.log(cartItems, "cartItems in cart wrapper")
+
+  const navigate = useNavigate()
 
   // total cart amount functionality
   const totalCartAmount =
@@ -20,7 +23,7 @@ function UserCartWrapper({ cartItems }) {
   // console.log(totalCartAmount, "total cart amount")
 
   return (
-    <SheetContent className="overflow-y-auto">
+    <SheetContent className="overflow-y-auto bg-white">
       <SheetHeader>
         <SheetTitle>Your Cart</SheetTitle>
       </SheetHeader>
@@ -43,7 +46,9 @@ function UserCartWrapper({ cartItems }) {
         </div>
       </div>
 
-      <Button className="w-full mt-6">Checkout</Button>
+      <Button className="w-full mt-6 bg-black text-white cursor-pointer"
+      onClick={() => navigate('/shop/checkout')}
+      >Checkout</Button>
     </SheetContent>
   );
 }

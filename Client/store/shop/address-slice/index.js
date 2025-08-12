@@ -33,7 +33,7 @@ export const editAddresses = createAsyncThunk(
 )
 export const deleteAddresses = createAsyncThunk(
     '/addresses/deleteAddress', async({userId, addressId}) => {
-        const response = await axios.post(`http://localhost:3000/api/shop/address/delete/${userId}/${addressId}`)
+        const response = await axios.delete(`http://localhost:3000/api/shop/address/delete/${userId}/${addressId}`)
 
         return response.data
     }

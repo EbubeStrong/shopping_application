@@ -74,7 +74,7 @@ function ShoppingAccount() {
 
             {/* Foreground centered image with glass background */}
             <div className="relative flex justify-center items-center md:w-[600px] mx-auto h-full z-10">
-              <div className="h-full w-[50%] md:w-[60%] lg:w-[80%] md:h-[100%] absolute bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl p-4">
+              <div className="h-full w-[50%] md:w-[60%] lg:w-[80%] md:h-[100%] absolute bg-white/50 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl p-4">
                 <img
                   src={slide}
                   alt={`Slide ${index + 1}`}

@@ -91,7 +91,7 @@ function HeaderRightContent() {
           variant="outline"
           size="icon"
         >
-          <ShoppingCart className="w-6 h-6" />
+          <ShoppingCart className="w-6 h-6 cursor-pointer" />
           <span className="sr-only">User cart</span>
         </Button>
         <UserCartWrapper

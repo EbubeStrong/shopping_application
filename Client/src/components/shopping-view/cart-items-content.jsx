@@ -60,7 +60,7 @@ function UserCartItemsContent({ cartItem }) {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8 rounded-full "
+            className="h-8 w-8 rounded-full cursor-pointer"
             onClick={() => handleUpdateQuantity(cartItem, "minus")}
             disabled={cartItem?.quantity === 1}
           >
@@ -71,7 +71,7 @@ function UserCartItemsContent({ cartItem }) {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8 rounded-full "
+            className="h-8 w-8 rounded-full cursor-pointer "
             onClick={() => handleUpdateQuantity(cartItem, "plus")}
           >
             <Plus className="w-4 h-4" />
@@ -90,7 +90,7 @@ function UserCartItemsContent({ cartItem }) {
         </p>
         <Trash
           onClick={() => handleCartItemDelete(cartItem)}
-          className="cursor-pointer mt-1"
+          className="cursor-pointer mt-1 hover:text-red-600"
           size={20}
         />
       </div>
