@@ -22,20 +22,47 @@ const AuthLogin = () => {
   
 
   
-  async function onSubmit(e) {
-  e.preventDefault();
+//   async function onSubmit(e) {
+//   e.preventDefault();
   
+//   try {
+    // const data = await dispatch(loginUser(formData)).unwrap();
+
+//     if (data?.payload?.success) {
+//       toast({
+//         title: data.payload.message,
+//       });
+//       navigate("/auth/register");  // Uncomment if you want redirection
+//     } else {
+//       toast({
+//         title: data?.payload?.message || "An error occurred",
+//         variant: "destructive",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Login error:", error);
+//     toast({
+//       title: "Something went wrong. Please try again.",
+//       variant: "destructive",
+//     });
+//   }
+// }
+
+async function onSubmit(e) {
+  e.preventDefault();
+
   try {
+    // unwrap() returns the fulfilled payload directly
     const data = await dispatch(loginUser(formData)).unwrap();
 
-    if (data?.payload?.success) {
+    if (data?.success) {
       toast({
-        title: data.payload.message,
+        title: data.message,
       });
-      navigate("/auth/register");  // Uncomment if you want redirection
+      navigate("/auth/register"); // Uncomment if you want redirection
     } else {
       toast({
-        title: data?.payload?.message || "An error occurred",
+        title: data?.message || "An error occurred",
         variant: "destructive",
       });
     }
@@ -47,6 +74,7 @@ const AuthLogin = () => {
     });
   }
 }
+
 
 
   return (

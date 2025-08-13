@@ -50,7 +50,7 @@ const   AuthRegister = () => {
     dispatch(registerUser(formData))
       .unwrap() // Ensures the returned value is resolved properly
       .then((data) => {
-        console.log("Register Response:", data);
+        // console.log("Register Response:", data);
 
         if (data?.success) {
           toast({
