@@ -1,14 +1,17 @@
-import shoeOne from "../../assets/Images/pics1.jpg";
-import shoeTwo from "../../assets/Images/pics2.jpg";
-import shoeThree from "../../assets/Images/pics3.jpg";
-import shoeFour from "../../assets/Images/pics4.jpg";
-import shoeFive from "../../assets/Images/pics5.jpg";
-import shoeSix from "../../assets/Images/pics6.jpg";
+import shoeOne from "../../assets/Images/shoe_one.jpg";
+import shoeTwo from "../../assets/Images/shoe_two.jpg";
+import shoeThree from "../../assets/Images/shoe_three.jpg";
+import shoeFour from "../../assets/Images/shoe_four.jpg";
+import shoeFive from "../../assets/Images/shoe_five.jpg";
+import shoeSix from "../../assets/Images/shoe_six.jpg";
+import shoeSeven from "../../assets/Images/shoe_seven.jpg";
+import shoeSEight from "../../assets/Images/shoe_eight.jpg";
+import shoeNine from "../../assets/Images/shoe_nine.jpg";
 
-import palmsOne from "../../assets/Images/palms1.jpg";
-import palmsTwo from "../../assets/Images/palms2.jpg";
-import palmsThree from "../../assets/Images/palms3.jpg";
-import palmsFour from "../../assets/Images/palms4.jpg";
+import palmsOne from "../../assets/Images/palms_one.jpg";
+import palmsTwo from "../../assets/Images/palms_two.jpg";
+import palmsThree from "../../assets/Images/palms_three.jpg";
+import palmsFour from "../../assets/Images/palms_four.jpg";
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,13 +45,13 @@ function ShoppingAccount() {
     const interval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
       setCurrentSlideBg((prevSlide) => (prevSlide + 1) % slidesBg.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, [slides.length, slidesBg.length]);
 
   return (
     <div className="flex flex-col">
-      <div className="relative w-full h-[300px] md:h-[400px] lg:h-[550px] overflow-hidden">
+      <div className="relative w-full h-[300px] md:h-[400px] lg:h-[450px] overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -74,7 +77,7 @@ function ShoppingAccount() {
 
             {/* Foreground centered image with glass background */}
             <div className="relative flex justify-center items-center md:w-[600px] mx-auto h-full z-10">
-              <div className="h-full w-[50%] md:w-[60%] lg:w-[80%] md:h-[100%] absolute bg-white/50 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl p-4">
+              <div className="h-full w-[50%] md:w-[60%] md:h-[100%] absolute bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl p-2">
                 <img
                   src={slide}
                   alt={`Slide ${index + 1}`}
