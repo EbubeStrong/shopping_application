@@ -45,7 +45,7 @@ function AdminHeader({
     });
   }
   return (
-    <header className="flex items-center justify-between px-4 py-3 bg-background border-b fixed top-0 z-50 w-full ">
+    <header className="flex items-center justify-between px-4 py-3 bg-white border-b fixed top-0 z-50 w-full ">
       <Button onClick={() => setOpen(true)} className="lg:hidden sm:block">
         <AlignJustify />
         <span className="sr-only">Toggle Menu</span>
@@ -55,7 +55,7 @@ function AdminHeader({
         <div className=" w-full flex justify-end">
           {isProductsPage && showAddButton && (
             <Button
-              className="block"
+              className="block bg-white shadow-md cursor-pointer"
               onClick={() => {
                 setOpenCreateProductsDialog(true);
                 setShowButton(false);

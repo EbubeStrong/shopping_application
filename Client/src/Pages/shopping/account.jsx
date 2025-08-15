@@ -5,7 +5,7 @@ import shoeFour from "../../assets/Images/shoe_four.jpg";
 import shoeFive from "../../assets/Images/shoe_five.jpg";
 import shoeSix from "../../assets/Images/shoe_six.jpg";
 import shoeSeven from "../../assets/Images/shoe_seven.jpg";
-import shoeSEight from "../../assets/Images/shoe_eight.jpg";
+import shoeEight from "../../assets/Images/shoe_eight.jpg";
 import shoeNine from "../../assets/Images/shoe_nine.jpg";
 
 import palmsOne from "../../assets/Images/palms_one.jpg";
@@ -14,10 +14,10 @@ import palmsThree from "../../assets/Images/palms_three.jpg";
 import palmsFour from "../../assets/Images/palms_four.jpg";
 
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Orders from "@/components/shopping-view/orders";
 import Address from "@/components/shopping-view/address";
+import ShoppingOrders from "@/components/shopping-view/orders";
 
 function ShoppingAccount() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -31,9 +31,12 @@ function ShoppingAccount() {
     palmsTwo,
     shoeFour,
     palmsThree,
+    shoeSeven,
     palmsFour,
     shoeFive,
+    shoeEight,
     shoeSix,
+    shoeNine
   ];
 
   const slides = imageSources;
@@ -93,12 +96,12 @@ function ShoppingAccount() {
         <div className="flex flex-col rounded-lg border bg-background p-6 shadow-sm">
           <Tabs defaultValue="orders">
             <TabsList>
-              <TabsTrigger value="orders">Orders</TabsTrigger>
-              <TabsTrigger value="address">Address</TabsTrigger>
+              <TabsTrigger value="orders" className="cursor-pointer">Orders</TabsTrigger>
+              <TabsTrigger value="address" className="cursor-pointer">Address</TabsTrigger>
             </TabsList>
 
             <TabsContent value="orders">
-              <Orders />
+              <ShoppingOrders />
             </TabsContent>
              
             <TabsContent value="address">

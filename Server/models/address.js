@@ -12,5 +12,7 @@ const AddressSchema = new mongoose.Schema({
     timestamps: true
 }
 )
-
 module.exports =  mongoose.model('Address', AddressSchema)
+
+//this is for giving a custom collection naming e.g -> myAddress in mongoDB collection
+// module.exports =  mongoose.model('Address', AddressSchema, 'myAddress')
