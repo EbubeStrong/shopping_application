@@ -22,6 +22,7 @@ import AdminProductsSlice from "./admin/products-slice/index";
 import shopProductsSlice from "./shop/product-slice/index";
 import shopCartSlice from "./shop/cart-slice/index";
 import shopAddressSlice from "./shop/address-slice/index";
+import shopOrderSlice from "./shop/order-slice/index";
 
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -40,6 +41,7 @@ export const store = configureStore({
     shopProducts: shopProductsSlice,
     shopCart: shopCartSlice,
     shopAddress: shopAddressSlice,
+    shopOrder: shopOrderSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

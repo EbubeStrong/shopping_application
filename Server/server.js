@@ -1,10 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
-// const dotenv = require("dotenv");
+const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const authRouter = require("./routes/auth/auth-routes.js");
 
+// Load env before importing routes/controllers that may read env on require
+dotenv.config();
+
+const authRouter = require("./routes/auth/auth-routes.js");
 const adminProductsRouter = require("./routes/admin/products-routes.js")
 const shopProductsRouter = require("./routes/shop/product-routes.js")
 const shopCartRouter = require("./routes/shop/cart-routes.js")
@@ -13,7 +16,8 @@ const shopOrderRouter = require("./routes/shop/order-routes.js")
 
 mongoose
   .connect(
-    "mongodb+srv://ebubesammy567:Satara4naga2ba5ba2@shopping-application.2exaq.mongodb.net/"
+    process.env.MONGODB_URI ||
+      "mongodb+srv://ebubesammy567:Satara4naga2ba5ba2@shopping-application.2exaq.mongodb.net/"
   )
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
@@ -25,7 +29,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: ["http://localhost:5000"],
+    origin: ["http://localhost:5000", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "Content-Type",
