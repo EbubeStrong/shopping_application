@@ -9,7 +9,6 @@ import { Skeleton } from "../ui/skeleton";
 function ProductImageUpload({
   imageFile,
   setImageFile,
-  uploadImageUrl,
   setUploadImageUrl,
   imageLoadingState,
   setImageLoadingState,
@@ -60,7 +59,8 @@ function ProductImageUpload({
     console.log(response);
 
     if (response?.data?.success) {
-      setUploadImageUrl(response.data.result.url);
+      // setUploadImageUrl(response.data.result.url);
+      setUploadImageUrl(response.data.result.secure_url); // ✅ use secure_url
       setImageLoadingState(false);
     }
   }
@@ -70,13 +70,13 @@ function ProductImageUpload({
   }, [imageFile]);
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-md mx-auto bg-white ">
       <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
 
       <div
         className={`${
           isEditMode ? "opacity-60" : ""
-        }border-2 border-dashed rounded-lg p-4`}
+        }border-2 border-dashed rounded-lg p-4 shadow`}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
@@ -86,7 +86,7 @@ function ProductImageUpload({
           //   className="hidden"
           ref={inputRef}
           onChange={handleImageFileChange}
-          disabled={isEditMode}
+          // disabled={isEditMode}
         />
         {!imageFile ? (
           <label
@@ -96,12 +96,21 @@ function ProductImageUpload({
             } flex flex-col items-center justify-center h-32 cursor-pointer`}
           >
             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
-            <span>Drag & Drop or click to uplod image</span>
+            <span>Drag & Drop or click to upload image</span>
           </label>
         ) : imageLoadingState ? (
           <Skeleton className="h-10 bg-gray-100" />
         ) : (
           <div className="flex items-center justify-between">
+
+            {setUploadImageUrl && (
+              <img
+                src={setUploadImageUrl}
+                alt="Uploaded preview"
+                className="w-full h-64 object-cover rounded-lg border mb-2"
+              />
+            )}
+
             <div className="flex items center">
               <FileIcon className="w-8 text-primary mr-2 h-8" />
             </div>

@@ -48,7 +48,7 @@ function UserCartWrapper({ open, cartItems, handleSetOpenCartSheet }) {
       <div className="mt-8 space-y-4">
         <div className="flex justify-between">
           <span className="font-bold">Total</span>
-          <span className="font-bold">₦{totalCartAmount?.toLocaleString()}
+          <span className="font-bold">${totalCartAmount?.toLocaleString()}
           </span>
         </div>
       </div>

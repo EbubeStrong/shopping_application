@@ -8,3 +8,40 @@ const environment = new paypal.core.SandboxEnvironment(
 const client = new paypal.core.PayPalHttpClient(environment);
 
 module.exports = client;
+
+
+// const paypal = require('@paypal/checkout-server-sdk');
+
+// let clientId = process.env.PAYPAL_CLIENT_ID;
+// let clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+
+// let environment =
+//   process.env.NODE_ENV === "production"
+//     ? new paypal.core.LiveEnvironment(clientId, clientSecret) // Real payments
+//     : new paypal.core.SandboxEnvironment(clientId, clientSecret); // Test mode
+
+// let client = new paypal.core.PayPalHttpClient(environment);
+
+// module.exports = client;
+
+
+// const paypal = require('@paypal/checkout-server-sdk');
+
+// let clientId = process.env.PAYPAL_CLIENT_ID;
+// let clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+
+// function environment() {
+//   if (process.env.NODE_ENV === "production" &&  process.env.PAYPAL_MODE === "sandbox") {
+//     // Live Environment
+//     return new paypal.core.LiveEnvironment(clientId, clientSecret);
+//   } else {
+//     // Sandbox Environment
+//     return new paypal.core.SandboxEnvironment(clientId, clientSecret);
+//   }
+// }
+
+// function client() {
+//   return new paypal.core.PayPalHttpClient(environment());
+// }
+
+// module.exports = { client };

@@ -64,6 +64,7 @@ async function onSubmit(e) {
       toast({
         title: data?.message || "An error occurred",
         variant: "destructive",
+        className: "bg-white"
       });
     }
   } catch (error) {
@@ -71,6 +72,7 @@ async function onSubmit(e) {
     toast({
       title: "Something went wrong. Please try again.",
       variant: "destructive",
+      className: "bg-red-700"
     });
   }
 }

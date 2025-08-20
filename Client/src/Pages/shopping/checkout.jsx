@@ -78,7 +78,7 @@ function ShoppingCheckout() {
   function handleInitiatePaypalPayment() {
     const orderData = {
       userId: user?.id,
-
+      cartId: cartItems?._id,
       cartItems: cartItems.items.map((singleCartItem) => ({
         productId: singleCartItem?.productId,
         title: singleCartItem?.title,
@@ -189,7 +189,7 @@ function ShoppingCheckout() {
             <div className="flex justify-between">
               <span className="font-bold">Total</span>
               <span className="font-bold">
-                ₦{totalCartAmount?.toLocaleString()}
+                ${totalCartAmount?.toLocaleString()}
               </span>
             </div>
           </div>

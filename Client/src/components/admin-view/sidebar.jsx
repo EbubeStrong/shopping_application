@@ -59,8 +59,8 @@ function AdminSideBar({ open, setOpen, setShowAddButton }) {
   const navigate = useNavigate();
   return (
     <>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="left" className="w-64">
+      <Sheet open={open} onOpenChange={setOpen} >
+        <SheetContent side="left" className="w-64 bg-white">
           <div className="flex flex-col h-full">
             <SheetHeader className="border-b">
               <SheetTitle className="flex gap-2 mt-5 mb-5">

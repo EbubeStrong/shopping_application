@@ -67,6 +67,7 @@ function HeaderRightContent() {
       if (data?.payload?.success) {
         toast({
           title: data?.payload?.message,
+          className: "bg-white",
         });
         // navigate("/auth/login");
       }
@@ -90,10 +91,18 @@ function HeaderRightContent() {
           onClick={() => setOpenCartSheet(true)}
           variant="outline"
           size="icon"
+          className="relative cursor-pointer"
         >
           <ShoppingCart className="w-6 h-6 cursor-pointer" />
+
+          {/* Badge */}
+          <span className="absolute -top-2 -right-1 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">
+            {cartItems?.items?.length || 0}
+          </span>
+
           <span className="sr-only">User cart</span>
         </Button>
+
         <UserCartWrapper
           cartItems={
             cartItems && cartItems.items && cartItems.items.length > 0
@@ -189,16 +198,16 @@ function ShoppingHeader() {
 
           {/* Overlay */}
           {isSheetOpen && (
-            <div 
+            <div
               className="fixed inset-0 bg-black/50 z-40"
               onClick={() => setIsSheetOpen(false)}
             />
           )}
 
           {/* Mobile Menu */}
-          <div 
+          <div
             className={`fixed top-0 left-0 h-full w-80 bg-white z-50 transform transition-transform duration-300 ease-in-out ${
-              isSheetOpen ? 'translate-x-0' : '-translate-x-full'
+              isSheetOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
             <div className="p-6">
@@ -217,7 +226,6 @@ function ShoppingHeader() {
             </div>
           </div>
         </div>
-
 
         <div className="hidden lg:block">
           <MenuItems />

@@ -24,6 +24,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllFilteredProducts } from "../../../store/shop/product-slice";
 import ShoppingProductTile from "@/components/shopping-view/userProduct-tile";
 import { useNavigate } from "react-router-dom";
+import { addToCart, fetchCartItems } from "../../../store/shop/cart-slice";
+import { useToast } from "@/hooks/use-toast";
 
 // Categories heading with icons
 const categoriesHeadings = [
@@ -52,6 +54,11 @@ function ShoppingHome() {
 
   // Redux dispatch function for fetchingAllFilteredProducts
   const dispatch = useDispatch();
+
+  const { toast } = useToast();
+
+  
+  const { user } = useSelector((state) => state.auth);
 
   const { productList } = useSelector((state) => state.shopProducts);
 
@@ -96,6 +103,27 @@ function ShoppingHome() {
       },
     });
   };
+
+
+   // Add to cart functionality
+   function handleAddToCart(getCurrentProductId) {
+    console.log(getCurrentProductId, "get current Product Id")
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: data?.payload?.message,
+          className: "bg-white"
+        });
+      }
+    });
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -224,7 +252,7 @@ function ShoppingHome() {
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mt-4">
             {productList && productList.length > 0 ? (
               productList.map((productItem, index) => (
-                <ShoppingProductTile key={index} product={productItem} />
+                <ShoppingProductTile key={index} product={productItem} handleAddToCart={handleAddToCart } />
               ))
             ) : (
               <div className="col-span-4 text-center text-gray-500">

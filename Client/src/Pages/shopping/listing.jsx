@@ -45,6 +45,8 @@ function ShoppingListing() {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+
+  
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -89,7 +91,7 @@ function ShoppingListing() {
 
   // Add to cart functionality
   function handleAddToCart(getCurrentProductId) {
-    // console.log(getCurrentProductId, "get current Product Id")
+    console.log(getCurrentProductId, "get current Product Id")
     dispatch(
       addToCart({
         userId: user?.id,
@@ -101,6 +103,7 @@ function ShoppingListing() {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: data?.payload?.message,
+          className: "bg-white"
         });
       }
     });
@@ -177,12 +180,13 @@ function ShoppingListing() {
                 </Button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuContent align="end" className="w-[200px] bg-white">
                 <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
                   {sortOptions.map((sortItem) => (
                     <DropdownMenuRadioItem
                       value={sortItem.id}
                       key={sortItem.id}
+                      className="cursor-pointer"
                     >
                       {sortItem.label}
                     </DropdownMenuRadioItem>

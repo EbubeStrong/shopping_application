@@ -41,7 +41,7 @@ function AdminOrdersView() {
               <TableCell>1235</TableCell>
               <TableCell>15/08/2025</TableCell>
               <TableCell>In Process</TableCell>
-              <TableCell>N10,000</TableCell>
+              <TableCell>$10,000</TableCell>
               <TableCell>
 
                 <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>

@@ -55,12 +55,14 @@ const   AuthRegister = () => {
         if (data?.success) {
           toast({
             title: data.message,
+            className: "bg-white"
           });
           navigate("/auth/login");
         } else {
           toast({
             title: data.message || "Registration failed",
             variant: "destructive",
+            className: "bg-red-700"
           });
         }
       })
@@ -69,6 +71,7 @@ const   AuthRegister = () => {
         toast({
           title: error?.message || "Something went wrong",
           variant: "destructive",
+          className: "bg-red-700"
         });
       });
   }

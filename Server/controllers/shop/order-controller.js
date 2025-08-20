@@ -299,7 +299,9 @@
 
 const paypal = require("@paypal/checkout-server-sdk");
 const paypalClient = require("../../helpers/paypal");
+// const {client} = require("../../helpers/paypal");
 const Order = require("../../models/order");
+const Cart = require("../../models/cart");
 
 // ✅ Create PayPal order
 const createOrder = async (req, res) => {
@@ -314,6 +316,9 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
+      paymentId,
+      payerId,
+      cartId
     } = req.body;
 
     // Build items for PayPal
@@ -332,19 +337,35 @@ const createOrder = async (req, res) => {
       0
     ).toFixed(2);
 
+
+    // const paypalClient = client();
+
     // Build request
     const request = new paypal.orders.OrdersCreateRequest();
     request.prefer("return=representation");
     request.requestBody({
       intent: "CAPTURE",
+      // application_context: {
+      //   return_url:
+      //     // process.env.PAYPAL_RETURN_URL ||
+      //     `${"http://localhost:5000"}/paypal-return`,
+      //   cancel_url:
+      //     // process.env.PAYPAL_CANCEL_URL ||
+      //     // process.env.PAYPAL_CANCEL_URL
+      //     // `${process.env.CLIENT_URL || "http://localhost:5000"}/paypal-cancel`,
+      //     `${"http://localhost:5000"}/paypal-cancel`,
+      // },
+
+      // application_context: {
+      //   return_url: `${process.env.PAYPAL_RETURN_URL || "http://localhost:5000/paypal-return"}`,
+      //   cancel_url: `${process.env.PAYPAL_CANCEL_URL || "http://localhost:5000/paypal-cancel"}`,
+      // },
+
       application_context: {
-        return_url:
-          process.env.PAYPAL_RETURN_URL ||
-          `${process.env.CLIENT_URL || "http://localhost:5173"}/paypal-return`,
-        cancel_url:
-          process.env.PAYPAL_CANCEL_URL ||
-          `${process.env.CLIENT_URL || "http://localhost:5173"}/paypal-cancel`,
-      },
+        return_url: `${process.env.CLIENT_URL || "http://localhost:5000"}/shop/paypal-return`,
+        cancel_url: `${process.env.CLIENT_URL || "http://localhost:5000"}/shop/paypal-cancel`,
+      },      
+      
       purchase_units: [
         {
           amount: {
@@ -376,7 +397,10 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId: result.id, // store PayPal order ID
+      // paymentId: result.id, // store PayPal order ID
+      paymentId, // store PayPal order ID
+      payerId,
+      cartId
     });
     await newOrder.save();
 
@@ -398,42 +422,81 @@ const createOrder = async (req, res) => {
 };
 
 // ✅ Capture PayPal order
-const captureOrder = async (req, res) => {
+const capturePayment = async (req, res) => {
+  // try {
+  //   const { orderId } = req.params;
+  //   // const { paymentId, payerId, orderId } = req.body;
+    
+  //   const request = new paypal.orders.OrdersCaptureRequest(orderId);
+  //   request.requestBody({});
+
+  //   const response = await paypalClient.execute(request);
+  //   const result = response.result;
+
+  //   const captureStatus = result.status;
+
+  //   // Update DB with payment result
+  //   const updatedOrder = await Order.findOneAndUpdate(
+  //     { paymentId: orderId },
+  //     {
+  //       paymentStatus: captureStatus === "COMPLETED" ? "paid" : "failed",
+  //       orderStatus: captureStatus === "COMPLETED" ? "confirmed" : "pending",
+  //       orderUpdateDate: new Date(),
+  //     },
+  //     { new: true }
+  //   );
+
+  //   res.status(200).json({
+  //     success: true,
+  //     status: captureStatus,
+  //     order: updatedOrder,
+  //     details: result,
+  //   });
+  // } catch (error) {
+  //   console.error("Error while capturing PayPal order:", error);
+  //   res.status(500).json({
+  //     success: false,
+  //     message: error.message || "Some error occurred while capturing order",
+  //   });
+  // }
+
   try {
-    const { orderId } = req.params;
+    
+    const {paymentId, payerId, orderId} = req.body
 
-    const request = new paypal.orders.OrdersCaptureRequest(orderId);
-    request.requestBody({});
+    let order =  await Order.findById(orderId)
 
-    const response = await paypalClient.execute(request);
-    const result = response.result;
+    if(!order){
+      return res.status(404).json({
+        success: false,
+        message: 'Order can not be found'
+      })
+    }
 
-    const captureStatus = result.status;
+    order.paymentStatus = 'paid'
+    order.orderStatus = 'confirmed'
+    order.paymentId = paymentId
+    order.payerId = payerId
 
-    // Update DB with payment result
-    const updatedOrder = await Order.findOneAndUpdate(
-      { paymentId: orderId },
-      {
-        paymentStatus: captureStatus === "COMPLETED" ? "paid" : "failed",
-        orderStatus: captureStatus === "COMPLETED" ? "confirmed" : "pending",
-        orderUpdateDate: new Date(),
-      },
-      { new: true }
-    );
+
+    const getCartId = order.cartId
+    const cart = await Cart.findByIdAndDelete(getCartId)
+
+    await order.save()
 
     res.status(200).json({
       success: true,
-      status: captureStatus,
-      order: updatedOrder,
-      details: result,
-    });
+      message: 'Order Confirmed',
+      data: order
+    })
+
   } catch (error) {
-    console.error("Error while capturing PayPal order:", error);
+    console.log(error)
     res.status(500).json({
       success: false,
-      message: error.message || "Some error occurred while capturing order",
-    });
+      message: "Some error occurred"
+    })
   }
 };
 
-module.exports = { createOrder, captureOrder };
+module.exports = { createOrder, capturePayment };

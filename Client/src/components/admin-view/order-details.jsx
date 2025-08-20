@@ -35,7 +35,7 @@ function AdminOrderDetailsView() {
 
           <div className="flex items-center justify-between mt-2">
             <p className="font-medium">Order Price</p>
-            <Label>N1,000</Label>
+            <Label>$1,000</Label>
           </div>
 
           <div className="flex items-center justify-between mt-2">

@@ -1,3 +1,4 @@
+import { data } from "react-router";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
@@ -40,12 +41,12 @@ function ShoppingProductTile({ product, handleGetProductDetails, handleAddToCart
                 product?.salePrice > 0 ? "line-through" : ""
               } text-lg font-semibold text-primary`}
             >
-              {product?.price}
+              ${product?.price}
             </span>
 
             {product?.salePrice > 0 ? (
               <span className="text-lg font-semibold text-primary">
-                {product?.salePrice}
+                ${product?.salePrice}
               </span>
             ) : null}
           </div>
@@ -53,8 +54,24 @@ function ShoppingProductTile({ product, handleGetProductDetails, handleAddToCart
       </div>
       <CardFooter>
         <Button
-          onClick={() => handleAddToCart(product?._id)}
-          className="w-full"
+          // onClick={() => 
+          //   console.log(handleAddToCart())
+          //   // handleAddToCart(product?._id)
+          // }
+          // onClick={() => {
+          //   if (handleAddToCart) {
+          //     console.log("handleAddToCart is available:", handleAddToCart);
+          //     handleAddToCart(product?._id);
+          //   } else {
+          //     console.log("handleAddToCart is missing!");
+          //   }
+          // }}
+          onClick={() => {
+            console.log("Clicked Add to Cart for:", product?._id);
+            handleAddToCart(product?._id);
+          }}
+        
+          className="w-full bg-black/90 text-white cursor-pointer"
         >
           Add to cart
         </Button>

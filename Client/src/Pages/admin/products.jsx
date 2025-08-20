@@ -34,7 +34,7 @@ const initialFormData = {
 function AdminProducts() {
   const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(""); // Renamed for clarity
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null); // Renamed for clarity
   const [imageLoadingState, setImageLoadingState] = useState(false);
   const [currentEditedId, setCurrentEditedId] = useState(null);
 
@@ -68,48 +68,100 @@ function AdminProducts() {
           title: "Success",
           description: "Product edited successfully",
           variant: "default",
+          className: "bg-white",
         });
       } catch (error) {
         toast({
           title: "Error",
           description: error?.message || "Error editing product",
           variant: "destructive",
+          className: "bg-red-700",
         });
       }
-    } else {
+    } 
+    // else {
+    //   if (!uploadedImageUrl) {
+    //     toast({
+    //       title: "Error",
+    //       description: "Please upload an image before submitting",
+    //       variant: "destructive",
+    //       className: "bg-red-700",
+    //     });
+    //     return;
+    //   }
+
+    //   try {
+    //     console.log("Submitting form:", formData, uploadedImageUrl);
+    //     const result = await dispatch(
+    //       addNewProduct({ ...formData, image: uploadedImageUrl })
+    //     ).unwrap();
+
+    //     dispatch(fetchAllProducts());
+    //     setOpenCreateProductsDialog(false);
+    //     setFormData(initialFormData);
+    //     // setImageFile(null);
+    //     setImageFile(null);
+    //     setUploadedImageUrl(product?.image || null); // 👈 preload product image
+
+    //     toast({
+    //       title: "Success",
+    //       description: "Product added successfully",
+    //       variant: "default",
+    //       className: "bg-white",
+    //     });
+    //   } catch (error) {
+    //     toast({
+    //       title: "Error",
+    //       description: error?.message || "Error adding product",
+    //       variant: "destructive",
+    //       className: "bg-red-700 text-white",
+    //     });
+    //   }
+    // }
+
+    else {
       if (!uploadedImageUrl) {
         toast({
           title: "Error",
           description: "Please upload an image before submitting",
           variant: "destructive",
+          className: "bg-red-700",
         });
         return;
       }
-
+    
       try {
         console.log("Submitting form:", formData, uploadedImageUrl);
+    
         const result = await dispatch(
           addNewProduct({ ...formData, image: uploadedImageUrl })
         ).unwrap();
-
-        dispatch(fetchAllProducts());
-        setOpenCreateProductsDialog(false);
-        setFormData(initialFormData);
-        setImageFile(null);
-
-        toast({
-          title: "Success",
-          description: "Product added successfully",
-          variant: "default",
-        });
+    
+        if (result) {
+          await dispatch(fetchAllProducts());
+          setOpenCreateProductsDialog(false);
+          setFormData(initialFormData);
+          setImageFile(null);
+    
+          toast({
+            title: "Success",
+            description: "Product added successfully",
+            variant: "default",
+            className: "bg-green-600 text-white", // ✅ better feedback
+          });
+        }
       } catch (error) {
+        console.error("Error adding product:", error);
+    
         toast({
           title: "Error",
-          description: error?.message || "Error adding product",
+          description: error?.message || "Failed to add product. Try again.",
           variant: "destructive",
+          className: "bg-red-700 text-white",
         });
       }
     }
+    
   }
 
   function isFormValid() {
@@ -128,6 +180,7 @@ function AdminProducts() {
           title: "Success",
           description: "Product deleted successfully",
           variant: "default",
+          className: "bg-white",
         });
       }
     });
@@ -167,7 +220,7 @@ function AdminProducts() {
           setCurrentEditedId(null);
         }}
       >
-        <SheetContent side="right" className="overflow-auto">
+        <SheetContent side="right" className="overflow-auto bg-white">
           <SheetHeader>
             <SheetTitle>
               {currentEditedId !== null ? "Edit Product" : "Add New Product"}

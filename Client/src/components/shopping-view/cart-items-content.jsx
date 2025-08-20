@@ -21,6 +21,7 @@ function UserCartItemsContent({ cartItem }) {
       if (data?.payload?.success) {
         toast({
           title: "Cart Item is deleted successfully",
+          className: 'bg-white'
         });
       }
     });
@@ -41,6 +42,7 @@ function UserCartItemsContent({ cartItem }) {
       if (data?.payload?.success) {
         toast({
           title: "Cart Item is updated successfully",
+          className: 'bg-white'
         });
       }
     });
@@ -82,7 +84,7 @@ function UserCartItemsContent({ cartItem }) {
 
       <div className="flex flex-col items-end">
         <p className="font-semibold">
-          ₦
+          $
           {(
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
             cartItem?.quantity

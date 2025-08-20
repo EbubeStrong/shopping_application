@@ -27,9 +27,9 @@ function AdminProductTile({
                 product?.salePrice > 0 ? "line-through" : ""
               } text-lg font-semibold text-primary`}
             >
-              ₦{product?.price}
+              ${product?.price}
             </span>
-            {product?.salePrice > 0 ? <span>₦{product?.salePrice}</span> : null}
+            {product?.salePrice > 0 ? <span>${product?.salePrice}</span> : null}
           </div>
         </CardContent>
 
@@ -40,10 +40,13 @@ function AdminProductTile({
               setFormData(product);
               setOpenCreateProductsDialog(true);
             }}
-          >
+            className="bg-black/90 text-white"
+            >
             Edit
           </Button>
-          <Button onClick={() => handleDelete(product?._id)}>Delete</Button>
+          <Button onClick={() => handleDelete(product?._id)} 
+            className="bg-black/90 text-white"
+            >Delete</Button>
         </CardFooter>
       </div>
     </Card>
