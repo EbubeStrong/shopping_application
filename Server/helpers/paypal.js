@@ -1,5 +1,10 @@
 const paypal = require("@paypal/checkout-server-sdk");
 
+// Check if environment variables are set
+if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
+  console.error("PayPal credentials are not set. Please set PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET in your environment variables.");
+}
+
 const environment = new paypal.core.SandboxEnvironment(
   process.env.PAYPAL_CLIENT_ID,
   process.env.PAYPAL_CLIENT_SECRET

@@ -28,7 +28,11 @@ const OrderSchema = new mongoose.Schema({
     orderDate: Date,
     orderUpdateDate: Date,
     paymentId: String,
-    payerId: String
+    payerId: String,
+    processingPayment: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const Order = mongoose.model('Order', OrderSchema)

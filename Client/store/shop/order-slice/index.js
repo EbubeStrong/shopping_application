@@ -21,10 +21,10 @@ export const createNewOrder = createAsyncThunk(
 
 export const capturePayment = createAsyncThunk(
   "/order/captureNewPayment",
-  async ({paymentId, payerId, orderId}) => {
+  async ({ paypalOrderId, payerId, orderId }) => {
     const response = await axios.post(
       `http://localhost:3000/api/shop/order/capture`,
-      {paymentId, payerId, orderId}
+      { paypalOrderId, payerId, orderId }
     );
     return response.data
   }
@@ -49,6 +49,16 @@ const shoppingOrderSlice = createSlice({
         state.isLoading = false
         state.approvalURL = null
         state.orderId = null
+    })
+    .addCase(capturePayment.pending, (state) => {
+        state.isLoading = true
+    })
+    .addCase(capturePayment.fulfilled, (state, action) => {
+        state.isLoading = false
+    })
+    .addCase(capturePayment.rejected, (state, action) => {
+        state.isLoading = false
+        console.error("Payment capture failed:", action.error)
     })
   },
 });
