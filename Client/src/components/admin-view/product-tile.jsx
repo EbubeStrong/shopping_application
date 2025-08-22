@@ -38,6 +38,15 @@ function AdminProductTile({
             onClick={() => {
               setCurrentEditedId(product?._id);
               setFormData(product);
+              // preload current image into upload preview and clear any prior selection
+              if (typeof window !== 'undefined') {
+                try {
+                  // When editing, we expect parent to have setters in closure
+                  // We can signal via custom event so parent can sync image states
+                  const evt = new CustomEvent('admin-edit-product-image', { detail: { image: product?.image || null } });
+                  window.dispatchEvent(evt);
+                } catch (_) {}
+              }
               setOpenCreateProductsDialog(true);
             }}
             className="bg-black/90 text-white"

@@ -66,12 +66,24 @@ import { Loader2, CheckCircle2 } from "lucide-react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { motion, AnimatePresence } from "framer-motion"
 
-export function PaymentProcessingDialog() {
+export function PaymentProcessingDialog({ forceOpen = false }) {
   const [step, setStep] = useState(0)
-  const [open, setOpen] = useState(false) // start closed
+  const [open, setOpen] = useState(forceOpen) // start from prop if forced
 
   useEffect(() => {
     console.log("🔎 Checking spinner logic...")
+
+    // If parent forces dialog, show immediately with timers
+    if (forceOpen) {
+      setOpen(true)
+      const t1 = setTimeout(() => setStep(1), 600)
+      const t2 = setTimeout(() => setStep(2), 1200)
+      // Do not auto-close here; parent will navigate away
+      return () => {
+        clearTimeout(t1)
+        clearTimeout(t2)
+      }
+    }
 
     const currentUrl = window.location.href
     const lastShownUrl = sessionStorage.getItem("lastSpinnerUrl")
@@ -90,17 +102,17 @@ export function PaymentProcessingDialog() {
       const timer1 = setTimeout(() => {
         console.log("⏱ step -> 1 (Verifying transaction...)")
         setStep(1)
-      }, 2000)
+      }, 3000)
 
       const timer2 = setTimeout(() => {
         console.log("⏱ step -> 2 (Payment successful!)")
         setStep(2)
-      }, 4000)
+      }, 4500)
 
       const timer3 = setTimeout(() => {
         console.log("⏹ Closing spinner after success")
         setOpen(false)
-      }, 6000)
+      }, 6500)
 
       return () => {
         console.log("🧹 Cleaning up timers...")
@@ -111,7 +123,7 @@ export function PaymentProcessingDialog() {
     } else {
       console.log("🚫 Spinner not shown (either not paypal-return or already shown for this URL).")
     }
-  }, [])
+  }, [forceOpen])
 
   const messages = [
     {

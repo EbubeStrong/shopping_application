@@ -57,7 +57,10 @@ function PaypalReturnPage() {
           if (result.payload?.success) {
             console.log("Payment successful, redirecting to success page");
             sessionStorage.removeItem("currentOrderId");
-            window.location.href = "/shop/payment-success";
+            // Give the dialog a moment to render before navigating
+            setTimeout(() => {
+              window.location.href = "/shop/payment-success";
+            }, 700);
           } else {
             console.error("Payment capture failed:", result.payload);
             // Handle payment failure - redirect to error page or show error message
@@ -84,7 +87,7 @@ function PaypalReturnPage() {
       <Card className="relative">
         <CardHeader>Processing Payment... Please wait!</CardHeader>
       </Card>
-      <PaymentProcessingDialog />
+      <PaymentProcessingDialog forceOpen={true} />
     </>
   );
 }

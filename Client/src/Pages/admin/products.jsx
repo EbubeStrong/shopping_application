@@ -51,18 +51,35 @@ function AdminProducts() {
   const dispatch = useDispatch();
   const { toast } = useToast();
 
+  // Listen for image preload signal from tile and sync preview state
+  useEffect(() => {
+    function onPreloadImage(e) {
+      const next = e?.detail?.image || null;
+      setUploadedImageUrl(next);
+      setImageFile(null);
+    }
+    window.addEventListener('admin-edit-product-image', onPreloadImage);
+    return () => window.removeEventListener('admin-edit-product-image', onPreloadImage);
+  }, []);
+
   async function onSubmit(e) {
     e.preventDefault();
 
     if (currentEditedId !== null) {
       try {
+        // Ensure we submit the latest uploaded image if available
+        const payload = uploadedImageUrl
+          ? { ...formData, image: uploadedImageUrl }
+          : formData;
         const result = await dispatch(
-          editProduct({ id: currentEditedId, formData })
+          editProduct({ id: currentEditedId, formData: payload })
         ).unwrap();
 
         dispatch(fetchAllProducts());
         setOpenCreateProductsDialog(false);
         setFormData(initialFormData);
+        setUploadedImageUrl(null);
+        setImageFile(null);
 
         toast({
           title: "Success",
@@ -142,6 +159,7 @@ function AdminProducts() {
           setOpenCreateProductsDialog(false);
           setFormData(initialFormData);
           setImageFile(null);
+          setUploadedImageUrl(null);
     
           toast({
             title: "Success",
@@ -190,6 +208,13 @@ function AdminProducts() {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 
+  // Keep formData.image in sync with uploadedImageUrl for live preview/submit consistency
+  useEffect(() => {
+    if (uploadedImageUrl) {
+      setFormData((prev) => ({ ...prev, image: uploadedImageUrl }));
+    }
+  }, [uploadedImageUrl]);
+
   // console.log(productList, "productList");
 
   return (
@@ -218,6 +243,8 @@ function AdminProducts() {
           setOpenCreateProductsDialog(false);
           setFormData(initialFormData);
           setCurrentEditedId(null);
+          setUploadedImageUrl(null);
+          setImageFile(null);
         }}
       >
         <SheetContent side="right" className="overflow-auto bg-white">

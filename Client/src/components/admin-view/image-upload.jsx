@@ -9,6 +9,7 @@ import { Skeleton } from "../ui/skeleton";
 function ProductImageUpload({
   imageFile,
   setImageFile,
+  uploadImageUrl,
   setUploadImageUrl,
   imageLoadingState,
   setImageLoadingState,
@@ -37,6 +38,7 @@ function ProductImageUpload({
 
   function handleRemoveImage(e) {
     setImageFile(null);
+    setUploadImageUrl(null);
     if (inputRef.current) {
       inputRef.current.value = "";
     }
@@ -88,29 +90,32 @@ function ProductImageUpload({
           onChange={handleImageFileChange}
           // disabled={isEditMode}
         />
-        {!imageFile ? (
-          <label
-            htmlFor="image-upload"
-            className={`${
-              isEditMode ? "cursor-not-allowed" : null
-            } flex flex-col items-center justify-center h-32 cursor-pointer`}
-          >
-            <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
-            <span>Drag & Drop or click to upload image</span>
-          </label>
-        ) : imageLoadingState ? (
+        {imageLoadingState ? (
           <Skeleton className="h-10 bg-gray-100" />
-        ) : (
+        ) : uploadImageUrl ? (
+          <div>
+            <img
+              src={uploadImageUrl}
+              alt="Uploaded preview"
+              className="w-full h-64 object-cover rounded-lg border mb-2"
+            />
+            <div className="flex items-center justify-between">
+              <div className="flex items center">
+                <FileIcon className="w-8 text-primary mr-2 h-8" />
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:tex-foreground"
+                onClick={handleRemoveImage}
+              >
+                <XIcon className="w-4 h-4" />
+                <span className="sr-only">Remove File</span>
+              </Button>
+            </div>
+          </div>
+        ) : imageFile ? (
           <div className="flex items-center justify-between">
-
-            {setUploadImageUrl && (
-              <img
-                src={setUploadImageUrl}
-                alt="Uploaded preview"
-                className="w-full h-64 object-cover rounded-lg border mb-2"
-              />
-            )}
-
             <div className="flex items center">
               <FileIcon className="w-8 text-primary mr-2 h-8" />
             </div>
@@ -125,6 +130,16 @@ function ProductImageUpload({
               <span className="sr-only">Remove File</span>
             </Button>
           </div>
+        ) : (
+          <label
+            htmlFor="image-upload"
+            className={`${
+              isEditMode ? "cursor-not-allowed" : null
+            } flex flex-col items-center justify-center h-32 cursor-pointer`}
+          >
+            <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
+            <span>Drag & Drop or click to upload image</span>
+          </label>
         )}
       </div>
     </div>

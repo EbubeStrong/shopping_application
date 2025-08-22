@@ -63,9 +63,11 @@ const fetchCartItems = async (req, res) => {
       select: "image title price description",
     });
     if (!cart) {
-      return res.status(404).json({
-        success: false,
-        message: "Cart not found",
+      // Return empty cart instead of 404 to avoid noisy errors after checkout
+      return res.status(200).json({
+        success: true,
+        message: "Cart is empty",
+        data: { items: [] },
       });
     }
 
