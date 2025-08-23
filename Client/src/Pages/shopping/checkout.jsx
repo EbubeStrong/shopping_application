@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UserCartItemsContent from "@/components/shopping-view/cart-items-content";
 import { Button } from "@/components/ui/button";
 import { createNewOrder } from "../../../store/shop/order-slice";
+import { useToast } from "@/hooks/use-toast";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -28,6 +29,8 @@ function ShoppingCheckout() {
   const [isPaymentStart, setIsPaymentStart] = useState(false)
 
   const dispatch = useDispatch()
+
+  const {toast} = useToast()
 
     // console.log(cartItems, "cartItems")
   // console.log(currentSelectedAddress, "selectedAddress")
@@ -76,6 +79,27 @@ function ShoppingCheckout() {
 
   //function for paypal payment
   function handleInitiatePaypalPayment() {
+    if(cartItems.length === 0){
+      toast({
+        title: 'Your cart is empty. Please add items to cart to proceed',
+        variant: 'destructive',
+        className: "bg-red-600 text-white"
+      })
+
+      return
+    }
+
+
+    if(currentSelectedAddress  === null){
+      toast({
+        title: 'Please select one address to proceed.',
+        variant: 'destructive',
+        className: "bg-red-600 text-white"
+      })
+
+      return
+    }
+
     const orderData = {
       userId: user?.id,
       cartId: cartItems?._id,

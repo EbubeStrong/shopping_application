@@ -19,6 +19,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth-slice";
 import AdminProductsSlice from "./admin/products-slice/index";
+import AdminOrderSlice from "./admin/order-slice/index";
+
 import shopProductsSlice from "./shop/product-slice/index";
 import shopCartSlice from "./shop/cart-slice/index";
 import shopAddressSlice from "./shop/address-slice/index";
@@ -37,7 +39,10 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer, // Persisting only auth
+    
     adminProducts: AdminProductsSlice,
+    adminOrder: AdminOrderSlice,
+
     shopProducts: shopProductsSlice,
     shopCart: shopCartSlice,
     shopAddress: shopAddressSlice,

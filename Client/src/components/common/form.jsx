@@ -54,19 +54,19 @@ function CommonForm({
 
       case "select":
         element = (
-          <Select onValueChange={(value) => setFormData({
+          <Select className="bg-white" onValueChange={(value) => setFormData({
             ...formData, [getControlItem.name]: value
           })} value={value}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder={getControlItem.placeholder} />
             </SelectTrigger>
 
-            <SelectContent>
+            <SelectContent className="bg-white">
               {getControlItem.options &&
                 getControlItem.options.length > 0 &&
                 getControlItem.options.map((optionItem) =>
                   optionItem ? (
-                    <SelectItem key={optionItem.id} value={optionItem.id}>
+                    <SelectItem key={optionItem.id} value={optionItem.id} className="hover:bg-black hover:text-white transition-all cursor-pointer">
                       {optionItem.label}
                     </SelectItem>
                   ) : null

@@ -673,5 +673,59 @@ const capturePayment = async (req, res) => {
   }
 };
 
+const getAllOrdersByUser = async(req, res) => {
+  try {
+    const {userId} = req.params
 
-module.exports = { createOrder, capturePayment };
+    const orders = await Order.find({userId})
+
+    if(orders.length === 0){
+      return res.status(404).json({
+        success: false,
+        message: 'No orders found!'
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      data: orders
+    })
+    
+  }  catch (error) {
+    console.error("Error while getting all PayPal order:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Some error occurred while  getting all PayPal order",
+    });
+  }
+}
+
+const getAllOrderDetails = async(req, res) => {
+  try {
+    const {id} = req.params
+
+    const order = await Order.findById(id)
+
+    if(!order){
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found!'
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      data: order
+    })
+
+  }  catch (error) {
+    console.error("Error while getting all PayPal order details:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Some error occurred while  getting all PayPal order details",
+    });
+  }
+}
+
+
+module.exports = { createOrder, capturePayment, getAllOrdersByUser, getAllOrderDetails };
