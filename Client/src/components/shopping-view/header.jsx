@@ -38,7 +38,7 @@ import { fetchCartItems } from "../../../store/shop/cart-slice";
 import { Label } from "../ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-function MenuItems() {
+function MenuItems({ setIsSheetOpen }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -67,7 +67,7 @@ function MenuItems() {
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
-          onClick={() => handleNavigate(menuItem)}
+          onClick={() => (handleNavigate(menuItem), setIsSheetOpen && setIsSheetOpen(false))}
           className="text-sm font-medium cursor-pointer"
           key={menuItem.id}
         >
@@ -246,8 +246,8 @@ function ShoppingHeader() {
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              <MenuItems />
-              <HeaderRightContent setIsSheetOpen={setIsSheetOpen}  />
+              <MenuItems setIsSheetOpen={setIsSheetOpen} />
+              <HeaderRightContent setIsSheetOpen={setIsSheetOpen} />
             </div>
           </div>
         </div>

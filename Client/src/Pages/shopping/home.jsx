@@ -232,7 +232,7 @@ function ShoppingHome() {
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-6">Shop by Brand</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mt-8">
             {brandsWithIcon.map((brand) => {
               const IconComponent = brand.logoIcon;
               const logo = `https://cdn.simpleicons.org/${brand.id}`;
