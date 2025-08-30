@@ -58,13 +58,14 @@ async function onSubmit(e) {
     if (data?.success) {
       toast({
         title: data.message,
+        className: "bg-white text-green-500"
       });
       navigate("/auth/register"); // Uncomment if you want redirection
     } else {
       toast({
         title: data?.message || "An error occurred",
         variant: "destructive",
-        className: "bg-white"
+        className: "bg-red-700"
       });
     }
   } catch (error) {

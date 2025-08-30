@@ -234,7 +234,8 @@ function AdminOrderDetailsView({ orderDetails }) {
                              ? "text-white bg-blue-500"
                              : orderDetails?.orderStatus === "inShipping"
                                ? "text-white bg-orange-500"
-                               : "bg-white text-black"
+                                      : "bg-black text-white"
+
                    }`}
                  >
                   {orderDetails?.orderStatus}
