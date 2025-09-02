@@ -121,7 +121,7 @@ function Address({gridCols = 3, setCurrentSelectedAddress}) {
       .every((item) => item);
   }
 
-  // rendering all the fecthAllAddressess
+  // rendering all the fetchAllAddresses
   useEffect(() => {
     dispatch(fetchAllAddresses(user?.id));
   }, [dispatch]);

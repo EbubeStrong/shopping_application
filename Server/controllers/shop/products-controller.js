@@ -57,7 +57,7 @@ const getFilteredProducts = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error occured filtrating products",
+      message: "Error occurred filtrating products",
     });
   }
 };

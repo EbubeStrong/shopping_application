@@ -301,6 +301,7 @@ const paypal = require("@paypal/checkout-server-sdk");
 const paypalClient = require("../../helpers/paypal");
 const Order = require("../../models/order");
 const Cart = require("../../models/cart");
+const Product = require("../../models/products")
 
 // ✅ Create PayPal order
 const createOrder = async (req, res) => {
@@ -326,7 +327,7 @@ const createOrder = async (req, res) => {
       sku: item.productId,
       unit_amount: {
         currency_code: "USD",
-        value: Number(item.price).toFixed(2),
+        value: Number(item.salePrice).toFixed(2),
       },
       quantity: String(item.quantity),
     }));
@@ -633,6 +634,21 @@ const capturePayment = async (req, res) => {
     order.payerId = payerId;
     order.orderUpdateDate = new Date();
     order.processingPayment = false; // Clear processing flag
+
+    for(let item of order.cartItems){
+      let product = await Product.findById(item.productId)
+
+      if(!product){
+        return res.status(404).json({
+          success: false,
+          message: `Not enough stock for this product ${product.title}`
+        })
+      }
+      
+      product.totalStock -=item.quantity
+
+      await product.save()
+    }
 
     // Clear the cart if cartId exists
     if (order.cartId) {

@@ -8,8 +8,8 @@ import { Button } from '../ui/button'
 function AddressCard({addressInfo, handleDeleteAddress, handleEditAddress, setCurrentSelectedAddress}) {
   return (
     <Card 
-    onClick={setCurrentSelectedAddress ? () => setCurrentSelectedAddress(addressInfo) : null}
-    className="flex flex-col justify-between">
+    onClick={setCurrentSelectedAddress ? () => setCurrentSelectedAddress(addressInfo?._id) : null}
+    className="flex flex-col justify-between cursor-pointer hover:shadow-md border hover:border-black">
         <CardContent className="grid p-4 gap-4">
             <Label>Address: {addressInfo?.address}</Label>
             <Label>City: {addressInfo?.city}</Label>

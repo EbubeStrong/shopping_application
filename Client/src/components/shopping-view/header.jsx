@@ -45,6 +45,7 @@ function MenuItems({ setIsSheetOpen }) {
 
   function handleNavigate(getCurrentMenuItem) {
     sessionStorage.removeItem("filters");
+    
     const currentFilter =
       getCurrentMenuItem.id !== "home" &&
       getCurrentMenuItem.id !== "products" &&

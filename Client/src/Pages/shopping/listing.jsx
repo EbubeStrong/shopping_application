@@ -23,6 +23,7 @@ import {
   fetchCartItems,
 } from "../../../store/shop/cart-slice/index";
 import { useToast } from "@/hooks/use-toast";
+// import { title } from "process";
 
 
 function createSearchParamsHelper(filterParams) {
@@ -45,6 +46,9 @@ function ShoppingListing() {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+  // console.log(productList, "ProductList")
+  
+  const { cartItems } = useSelector((state) => state.shopCart);
 
   
   const [filters, setFilters] = useState({});
@@ -91,7 +95,26 @@ function ShoppingListing() {
 
   // Add to cart functionality
   function handleAddToCart(getCurrentProductId) {
-    console.log(getCurrentProductId, "get current Product Id")
+    // console.log(getCurrentProductId, "get current Product Id")
+
+    const productInCart = cartItems?.items?.find(
+      (item) => item.productId === getCurrentProductId
+    );
+
+    const getProductInfo = productList?.find((item) => item._id === getCurrentProductId) || productDetails?.find(
+      (item) => item.id === getCurrentProductId
+    );
+
+    if(!getProductInfo) return;
+
+    if(productInCart && productInCart.quantity >= getProductInfo.totalStock){
+      toast({
+        title: "Product is out of stock",
+        className: "bg-red-600 text-white"
+      });
+      return;
+    }
+
     dispatch(
       addToCart({
         userId: user?.id,
@@ -99,22 +122,25 @@ function ShoppingListing() {
         quantity: 1,
       })
     ).then((data) => {
+      console.log(data, "data after add to cart")
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: data?.payload?.message,
-          className: "bg-white"
+          className: "bg-green-600 text-white"
         });
       }
     });
   }
 
+  //getting search params of the category, then pass it down in the useEffect below
+  const categorySearchParam = searchParams.get('category')
 
   // sorting useEffect
   useEffect(() => {
     setSort("price-low-to-high");
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-  }, []);
+  }, [categorySearchParam]);
 
 
   // For Params
