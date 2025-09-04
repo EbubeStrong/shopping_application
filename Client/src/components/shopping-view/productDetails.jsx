@@ -24,8 +24,7 @@ function ProductDetailsDialog({
   return (
     <div>
       <Dialog open={open} onOpenChange={handleDialogClose}>
-        <DialogTitle className="text-2xl font-bold">
-          Product Details
+        <DialogTitle>
         </DialogTitle>
         <DialogContent className="grid md:grid-cols-2 grid-cols-1 gap-8 sm:p-12 overflow-y-scroll md:overflow-hidden h-[700px] md:h-[600px] md:max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw] bg-white">
           <div className="relative  rounded-lg">

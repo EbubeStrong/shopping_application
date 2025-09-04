@@ -22,6 +22,7 @@ import { checkAuth } from "../store/auth-slice/index";
 import { Skeleton } from "@/components/ui/skeleton";
 import PaypalReturnPage from "./Pages/shopping/paypal-return";
 import PaymentSuccessPage from "./Pages/shopping/payment-success";
+import SearchProducts from "./Pages/shopping/search";
 
 export default function App() {
   // const isAuthenticated = false
@@ -122,6 +123,7 @@ export default function App() {
           <Route path="listing" element={<ShoppingListing />} />
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
+          <Route path="search" element={<SearchProducts />} />
         </Route>
         <Route path="/unauth-page" element={<UnAuthPage />} />
         <Route path="*" element={<NotFound />} />

@@ -9,11 +9,13 @@ dotenv.config();
 
 const authRouter = require("./routes/auth/auth-routes.js");
 const adminProductsRouter = require("./routes/admin/products-routes.js")
+const adminOrderRouter = require("./routes/admin/order-routes.js")
+
 const shopProductsRouter = require("./routes/shop/product-routes.js")
 const shopCartRouter = require("./routes/shop/cart-routes.js")
 const shopAddressRouter = require("./routes/shop/address-routes.js")
 const shopOrderRouter = require("./routes/shop/order-routes.js")
-const adminOrderRouter = require("./routes/admin/order-routes.js")
+const shopSearchRouter = require("./routes/shop/search-routes.js")
 
 mongoose
   .connect(
@@ -55,6 +57,7 @@ app.use("/api/shop/products", shopProductsRouter)
 app.use("/api/shop/cart", shopCartRouter)
 app.use("/api/shop/address", shopAddressRouter)
 app.use("/api/shop/order", shopOrderRouter)
+app.use("/api/shop/search", shopSearchRouter)
 
 app.get("/", (req, res) => {
   res.send("E-Commerce Application is Live ");

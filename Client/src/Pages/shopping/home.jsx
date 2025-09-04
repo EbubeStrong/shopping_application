@@ -106,7 +106,7 @@ function ShoppingHome() {
 
     if (productInCart && productInCart.quantity >= getProductInfo.totalStock) {
       toast({
-        title: `Only ${getProductInfo.totalStock} quantities can be added for this item`,
+       title: `Only ${getProductInfo.totalStock} quantities can be added for this item`,
         className: "bg-red-600 text-white",
       });
       return;
