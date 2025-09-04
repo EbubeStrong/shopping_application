@@ -84,7 +84,7 @@ function HeaderRightContent({ setIsSheetOpen }) {
   // console.log(user, "userName")
 
   const { cartItems } = useSelector((state) => state.shopCart);
-  // console.log(cartItems, "cartItems");
+  console.log(cartItems, "cartItems");
 
   const [openCartSheet, setOpenCartSheet] = useState(false);
 

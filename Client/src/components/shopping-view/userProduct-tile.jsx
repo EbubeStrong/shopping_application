@@ -28,7 +28,7 @@ function ShoppingProductTile({ product, handleGetProductDetails, handleAddToCart
           :
           
           product?.salePrice > 0 ? (
-            <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white">
+            <Badge className="absolute top-2 left-2 bg-green-600 hover:bg-red-600 text-white">
               Sale
             </Badge>
           ) : null}
@@ -68,25 +68,13 @@ function ShoppingProductTile({ product, handleGetProductDetails, handleAddToCart
       <CardFooter>
       
         <Button
-          // onClick={() => 
-          //   console.log(handleAddToCart())
-          //   // handleAddToCart(product?._id)
-          // }
-          // onClick={() => {
-          //   if (handleAddToCart) {
-          //     console.log("handleAddToCart is available:", handleAddToCart);
-          //     handleAddToCart(product?._id);
-          //   } else {
-          //     console.log("handleAddToCart is missing!");
-          //   }
-          // }}
           onClick={() => {
             console.log("Clicked Add to Cart for:", product?._id);
             handleAddToCart(product?._id);
           }}
         
           className={`${
-          product?.totalStock === 0  ? "cursor-not-allowed opacity-60" :
+          product?.totalStock === 0  ? "cursor-not-allowed opacity-60 w-full bg-black/90 text-white" :
            "w-full bg-black/90 text-white cursor-pointer"}`}
 
         >

@@ -61,6 +61,10 @@ function ShoppingHome() {
   );
   // const { featureImageList } = useSelector((state) => state.commonFeature);
 
+  const { cartItems } = useSelector((state) => state.shopCart);
+  // console.log(cartItems, "cartItems from shopCart")
+
+
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
@@ -87,7 +91,29 @@ function ShoppingHome() {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
+// Add to cart functionality
   function handleAddToCart(getCurrentProductId) {
+    // console.log(getCurrentProductId, "get current Product Id")
+    // console.log(cartItems, "cartItems from add to cart")
+
+    const productInCart = cartItems?.items?.find(
+      (item) => item.productId === getCurrentProductId
+    );
+
+    const getProductInfo = productList?.find((item) => item._id === getCurrentProductId) || productDetails?.find(
+      (item) => item.id === getCurrentProductId
+    );
+
+    if(!getProductInfo) return;
+
+    if(productInCart && productInCart.quantity >= getProductInfo.totalStock){
+      toast({
+        title: "Product is out of stock",
+        className: "bg-red-600 text-white"
+      });
+      return;
+    }
+
     dispatch(
       addToCart({
         userId: user?.id,
@@ -95,10 +121,12 @@ function ShoppingHome() {
         quantity: 1,
       })
     ).then((data) => {
+      // console.log(data, "data after add to cart")
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
         toast({
-          title: "Product is added to cart",
+          title: data?.payload?.message,
+          className: "bg-green-600 text-white"
         });
       }
     });
@@ -132,7 +160,7 @@ function ShoppingHome() {
   }, [dispatch]);
 
 
-  console.log(productList, "productList");
+  // console.log(productList, "productList");
 
   // useEffect(() => {
   //   dispatch(getFeatureImages());

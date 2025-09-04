@@ -60,7 +60,7 @@ const fetchCartItems = async (req, res) => {
     }
     const cart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
-      select: "image title price description",
+      select: "image title price salePrice description",
     });
     if (!cart) {
       // Return empty cart instead of 404 to avoid noisy errors after checkout
