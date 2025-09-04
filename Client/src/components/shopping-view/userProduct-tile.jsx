@@ -68,13 +68,14 @@ function ShoppingProductTile({ product, handleGetProductDetails, handleAddToCart
       <CardFooter>
       
         <Button
+        disabled={product?.totalStock === 0}
           onClick={() => {
-            console.log("Clicked Add to Cart for:", product?._id);
+            // console.log("Clicked Add to Cart for:", product?._id);
             handleAddToCart(product?._id);
           }}
         
           className={`${
-          product?.totalStock === 0  ? "cursor-not-allowed opacity-60 w-full bg-black/90 text-white" :
+          product?.totalStock === 0  ? "disabled cursor-not-allowed opacity-60 w-full bg-black/90 text-white" :
            "w-full bg-black/90 text-white cursor-pointer"}`}
 
         >

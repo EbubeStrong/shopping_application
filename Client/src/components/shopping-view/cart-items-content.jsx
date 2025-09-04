@@ -89,7 +89,7 @@ function UserCartItemsContent({ cartItem }) {
   // Stop if trying to exceed stock
   if (newQuantity > totalStock) {
     toast({
-      title: "Product is out of stock",
+      title: `Only ${totalStock} quantities can be added for this item`,
       className: "bg-red-600 text-white",
     });
     return;

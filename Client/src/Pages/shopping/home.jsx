@@ -10,7 +10,6 @@ import bannerThree from "../../assets/Images/pic-3.png";
 import bannerFour from "../../assets/Images/pic-4.png";
 import levisImage from "../../assets/Images/levisImage.jpg";
 
-
 import {
   BabyIcon,
   ChevronLeftIcon,
@@ -64,7 +63,6 @@ function ShoppingHome() {
   const { cartItems } = useSelector((state) => state.shopCart);
   // console.log(cartItems, "cartItems from shopCart")
 
-
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
@@ -73,9 +71,9 @@ function ShoppingHome() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-    // Array of banner images
+  // Array of banner images
   const slides = [bannerOne, bannerTwo, bannerThree, bannerFour];
-  const slidesBg = [bannerOneBg, bannerTwoBg, bannerThreeBg, bannerFourBg]; 
+  const slidesBg = [bannerOneBg, bannerTwoBg, bannerThreeBg, bannerFourBg];
 
   function handleNavigateToListingPage(getCurrentItem, section) {
     sessionStorage.removeItem("filters");
@@ -91,7 +89,7 @@ function ShoppingHome() {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
-// Add to cart functionality
+  // Add to cart functionality
   function handleAddToCart(getCurrentProductId) {
     // console.log(getCurrentProductId, "get current Product Id")
     // console.log(cartItems, "cartItems from add to cart")
@@ -100,16 +98,16 @@ function ShoppingHome() {
       (item) => item.productId === getCurrentProductId
     );
 
-    const getProductInfo = productList?.find((item) => item._id === getCurrentProductId) || productDetails?.find(
-      (item) => item.id === getCurrentProductId
-    );
+    const getProductInfo =
+      productList?.find((item) => item._id === getCurrentProductId) ||
+      productDetails?.find((item) => item.id === getCurrentProductId);
 
-    if(!getProductInfo) return;
+    if (!getProductInfo) return;
 
-    if(productInCart && productInCart.quantity >= getProductInfo.totalStock){
+    if (productInCart && productInCart.quantity >= getProductInfo.totalStock) {
       toast({
-        title: "Product is out of stock",
-        className: "bg-red-600 text-white"
+        title: `Only ${getProductInfo.totalStock} quantities can be added for this item`,
+        className: "bg-red-600 text-white",
       });
       return;
     }
@@ -126,7 +124,7 @@ function ShoppingHome() {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: data?.payload?.message,
-          className: "bg-green-600 text-white"
+          className: "bg-green-600 text-white",
         });
       }
     });
@@ -136,9 +134,7 @@ function ShoppingHome() {
     if (productDetails !== null) setOpenDetailsDialog(true);
   }, [productDetails]);
 
-
-
-   // Effect to change slides automatically every 3 seconds and to handle slide transitions
+  // Effect to change slides automatically every 3 seconds and to handle slide transitions
   useEffect(() => {
     // Automatically change slides every 6 seconds
     const interval = setInterval(() => {
@@ -147,8 +143,6 @@ function ShoppingHome() {
     }, 6000);
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, [slides.length, slidesBg.length]);
-
-
 
   useEffect(() => {
     dispatch(
@@ -159,7 +153,6 @@ function ShoppingHome() {
     );
   }, [dispatch]);
 
-
   // console.log(productList, "productList");
 
   // useEffect(() => {
@@ -168,7 +161,7 @@ function ShoppingHome() {
 
   return (
     <div className="flex flex-col min-h-screen">
-         <div className="relative w-full h-[500px] md:h-[800px] lg:h-[700px] pb-[2%]  overflow-hidden">
+      <div className="relative w-full h-[500px] md:h-[800px] lg:h-[700px] pb-[2%]  overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -224,34 +217,31 @@ function ShoppingHome() {
         </Button>
       </div>
 
-
-{/* Shop by category Section */}
+      {/* Shop by category Section */}
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
             Shop by category
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {categoriesWithIcon.map((categoryItem) => {
+            {categoriesWithIcon.map((categoryItem) => {
               const IconComponent = categoryItem.icon;
               return (
-                 <Card
+                <Card
                   key={categoryItem.id}
-                onClick={() =>
-                  handleNavigateToListingPage(categoryItem, "category")
-                }
-                className="cursor-pointer border-none hover:shadow-lg transition-shadow duration-300"
-              >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                   <IconComponent className="w-12 h-12 text-gray-700 mb-2" />
-                  {/* <categoryItem.icon className="w-12 h-12 mb-4 text-primary" /> */}
-                  <span className="font-bold">{categoryItem.label}</span>
-                </CardContent>
-              </Card>
+                  onClick={() =>
+                    handleNavigateToListingPage(categoryItem, "category")
+                  }
+                  className="cursor-pointer border-none hover:shadow-lg transition-shadow duration-300"
+                >
+                  <CardContent className="flex flex-col items-center justify-center p-6">
+                    <IconComponent className="w-12 h-12 text-gray-700 mb-2" />
+                    {/* <categoryItem.icon className="w-12 h-12 mb-4 text-primary" /> */}
+                    <span className="font-bold">{categoryItem.label}</span>
+                  </CardContent>
+                </Card>
               );
             })}
-
-
           </div>
         </div>
       </section>
@@ -265,28 +255,28 @@ function ShoppingHome() {
               const IconComponent = brand.logoIcon;
               const logo = `https://cdn.simpleicons.org/${brand.id}`;
               return (
-                 <Card
+                <Card
                   key={brand.id}
-                onClick={() => handleNavigateToListingPage(brand, "brand")}
-                className="cursor-pointer hover:shadow-lg transition-shadow border-none"
-              >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                     {IconComponent ? (
-                    <img
-                      src={brand.logoIcon}
-                      alt={`${brand.label} logo`}
-                      className="w-12 h-12 mb-2"
-                    />
-                  ) : (
-                    <img
-                      src={logo}
-                      alt={`${brand.label} logo`}
-                      className="w-12 h-12 mb-2"
-                    />
-                  )}
-                  <span className="font-bold">{brand.label}</span>
-                </CardContent>
-              </Card>
+                  onClick={() => handleNavigateToListingPage(brand, "brand")}
+                  className="cursor-pointer hover:shadow-lg transition-shadow border-none"
+                >
+                  <CardContent className="flex flex-col items-center justify-center p-6">
+                    {IconComponent ? (
+                      <img
+                        src={brand.logoIcon}
+                        alt={`${brand.label} logo`}
+                        className="w-12 h-12 mb-2"
+                      />
+                    ) : (
+                      <img
+                        src={logo}
+                        alt={`${brand.label} logo`}
+                        className="w-12 h-12 mb-2"
+                      />
+                    )}
+                    <span className="font-bold">{brand.label}</span>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
@@ -302,7 +292,7 @@ function ShoppingHome() {
             {productList && productList.length > 0
               ? productList.map((productItem) => (
                   <ShoppingProductTile
-                  key={productItem._id}
+                    key={productItem._id}
                     handleGetProductDetails={handleGetProductDetails}
                     product={productItem}
                     handleAddToCart={handleAddToCart}
@@ -316,6 +306,7 @@ function ShoppingHome() {
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
+        handleAddToCart={handleAddToCart}
       />
     </div>
   );

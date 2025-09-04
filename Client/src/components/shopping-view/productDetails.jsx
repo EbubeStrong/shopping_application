@@ -8,8 +8,12 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { setProductDetails } from "../../../store/shop/product-slice";
 
-function ProductDetailsDialog({ open, setOpen, productDetails, handleAddToCart }) {
-
+function ProductDetailsDialog({
+  open,
+  setOpen,
+  productDetails,
+  handleAddToCart,
+}) {
   const dispatch = useDispatch();
 
   function handleDialogClose() {
@@ -71,14 +75,30 @@ function ProductDetailsDialog({ open, setOpen, productDetails, handleAddToCart }
             </div>
 
             <div className="mt-5 mb-5">
-              <Button className="w-full" onClick={() => handleAddToCart(productDetails?._id)}>Add to Cart</Button>
+              <Button
+                disabled={productDetails?.totalStock === 0}
+                className={`${
+                  productDetails?.totalStock === 0
+                    ? "cursor-not-allowed opacity-60 w-full bg-black/90 text-white"
+                    : "w-full bg-black/90 text-white cursor-pointer"
+                }`}
+                onClick={() => (
+                  handleAddToCart(productDetails?._id),
+                  setOpen(false)
+                )}
+              >
+                {" "}
+                {productDetails?.totalStock === 0
+                  ? "Out of Stock"
+                  : "Add to cart"}
+              </Button>
             </div>
 
             <Separator />
 
-            <div className="max-h-[300px] overflow-auto">
+            <div className="max-h-[250px] overflow-auto pb-7">
               <h2 className="text-xl font-bold mb-4">Reviews</h2>
-              
+
               <div className="grid gap-6">
                 <div className="flex gap-4">
                   <Avatar>
@@ -172,12 +192,12 @@ function ProductDetailsDialog({ open, setOpen, productDetails, handleAddToCart }
                     </p>
                   </div>
                 </div>
-                          </div>
-                          
-                          <div className="mt-6 flex gap-2">
-                              <Input placeholder="Write a review..." />
-                              <Button>Submit</Button>
-                          </div>     
+              </div>
+
+              <div className="mt-6 flex gap-2">
+                <Input placeholder="Write a review..." />
+                <Button className="bg-black text-white">Submit</Button>
+              </div>
             </div>
           </div>
         </DialogContent>

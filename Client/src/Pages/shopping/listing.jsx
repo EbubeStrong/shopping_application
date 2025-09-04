@@ -100,6 +100,7 @@ function ShoppingListing() {
     const productInCart = cartItems?.items?.find(
       (item) => item.productId === getCurrentProductId
     );
+    console.log(productInCart, "productInCart")
 
     const getProductInfo = productList?.find((item) => item._id === getCurrentProductId) || productDetails?.find(
       (item) => item.id === getCurrentProductId
@@ -109,7 +110,7 @@ function ShoppingListing() {
 
     if(productInCart && productInCart.quantity >= getProductInfo.totalStock){
       toast({
-        title: "Product is out of stock",
+        title:`Only ${getProductInfo.totalStock} quantities can be added for this item`,
         className: "bg-red-600 text-white"
       });
       return;
