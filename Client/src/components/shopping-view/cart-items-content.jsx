@@ -1,9 +1,12 @@
 import { Minus, Plus, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCartItem, updateCartQuantity } from "../../../store/shop/cart-slice";
+import {
+  deleteCartItem,
+  updateCartQuantity,
+} from "../../../store/shop/cart-slice";
 import { useToast } from "@/hooks/use-toast";
-
+// import { fetchProductDetails } from "../../../store/shop/product-slice";
 
 function UserCartItemsContent({ cartItem }) {
   const { user } = useSelector((state) => state.auth);
@@ -12,8 +15,10 @@ function UserCartItemsContent({ cartItem }) {
     (state) => state.shopProducts
   );
 
+  // console.log(cartItem, "cartItem");
+
   const dispatch = useDispatch();
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   function handleCartItemDelete(getCartItem) {
     dispatch(
@@ -25,7 +30,7 @@ function UserCartItemsContent({ cartItem }) {
       if (data?.payload?.success) {
         toast({
           title: "Cart Item is deleted successfully",
-          className: 'bg-white'
+          className: "bg-white",
         });
       }
     });
@@ -53,69 +58,59 @@ function UserCartItemsContent({ cartItem }) {
   // }
 
   function handleUpdateQuantity(getCartItem, typeOfAction) {
-  // Find the product’s stock info
- const getProductInfo =
-  //  First, try to find the product in productList (an array of all products)
-  productList?.find(
-    (item) => (item._id ?? item.id) === getCartItem?.productId
-  ) ??
-  // 2, If not found in productList, check productDetails
-  (
-    Array.isArray(productDetails)
-      // 2a: If productDetails is an array, find the product in that array
-      ? productDetails.find(
-          (item) => (item._id ?? item.id) === getCartItem?.productId
-        )
-      // 2b: Else if productDetails is a single object (not array), check if it matches
-      : (
-          productDetails &&
-          ((productDetails._id ?? productDetails.id) === getCartItem?.productId
-            ? productDetails
-            : null)
-        )
-  );
+  const allCartItems = cartItem?.items ?? [];
+  const productId = String(getCartItem?.productId ?? "");
 
+  const cartIndex = allCartItems.findIndex(item => String(item.productId) === productId);
 
-  if (!getProductInfo) return;
+  const productIndex = (productList?.findIndex
+    ? productList.findIndex(prod => String(prod._id ?? prod.id) === productId)
+    : -1);
 
-  const totalStock = getProductInfo.totalStock ?? 0;
+  // Prefer productList stock, fall back to cart item if you stored it there
+  const totalStockRaw =
+    productIndex > -1 ? productList[productIndex]?.totalStock : getCartItem?.totalStock;
 
-  // Compute the new quantity before dispatch
-  let newQuantity =
-    typeOfAction === "plus"
-      ? getCartItem?.quantity + 1
-      : getCartItem?.quantity - 1;
+  const totalStock = Number(totalStockRaw);
+  if (!Number.isFinite(totalStock)) {
+    console.warn("Missing totalStock", { productIndex, totalStockRaw, prodId });
+    toast({
+      title: "Product stock not loaded yet",
+      variant: "destructive",
+    });
+    return;
+  }
 
-  // Stop if trying to exceed stock
-  if (newQuantity > totalStock) {
+  const currentQty = Number(allCartItems[cartIndex]?.quantity ?? getCartItem?.quantity ?? 0);
+  let newQty = typeOfAction === "plus" ? currentQty + 1 : currentQty - 1;
+
+  if (typeOfAction === "plus" && newQty > totalStock) {
     toast({
       title: `Only ${totalStock} quantities can be added for this item`,
-      className: "bg-red-600 text-white",
+      variant: "destructive",
+      className: "bg-red-600 text-white"
     });
     return;
   }
 
-  // Stop if quantity would drop below 1 (optional safeguard)
-  if (newQuantity < 1) {
+  if (typeOfAction !== "plus" && newQty < 1) {
     toast({
       title: "Quantity cannot be less than 1",
-      className: "bg-red-600 text-white",
+      variant: "destructive",
+      className: "bg-red-600 text-white"
     });
     return;
   }
 
-  // Dispatch the update
-  dispatch(
-    updateCartQuantity({
-      userId: user?.id,
-      productId: getCartItem?.productId,
-      quantity: newQuantity,
-    })
-  ).then((data) => {
+  dispatch(updateCartQuantity({
+    userId: user?.id,             
+    productId: productId,
+    quantity: newQty,
+  })).then((data) => {
     if (data?.payload?.success) {
-      toast({
-        title: "Cart Item is updated successfully",
-        className: "bg-white",
+      toast({ 
+        title: "Cart item is updated successfully",
+        className: "bg-white"
       });
     }
   });

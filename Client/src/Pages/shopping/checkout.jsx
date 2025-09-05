@@ -196,7 +196,7 @@ function ShoppingCheckout() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 mt-5 p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 mt-5 p-6 ">
         <Address 
         gridCols={2} 
         setCurrentSelectedAddress={setCurrentSelectedAddress}
@@ -222,9 +222,7 @@ function ShoppingCheckout() {
             <Button
               onClick={handleInitiatePaypalPayment}
               className="bg-blue-950 hover:bg-blue-900 transition-colors duration-300 text-white w-full cursor-pointer"
-            >
-              Checkout with Paypal
-            </Button>
+            >{isPaymentStart ? 'Redirecting to Paypal...' : 'Checkout with Paypal'}</Button>
           </div>
         </div>
       </div>
