@@ -34,7 +34,7 @@ const initialFormData = {
 function AdminProducts() {
   const [formData, setFormData] = useState(initialFormData);
   const [imageFile, setImageFile] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null); // Renamed for clarity
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null); 
   const [imageLoadingState, setImageLoadingState] = useState(false);
   const [currentEditedId, setCurrentEditedId] = useState(null);
 
@@ -155,7 +155,7 @@ function AdminProducts() {
         ).unwrap();
     
         if (result) {
-          await dispatch(fetchAllProducts());
+           dispatch(fetchAllProducts());
           setOpenCreateProductsDialog(false);
           setFormData(initialFormData);
           setImageFile(null);

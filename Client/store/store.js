@@ -28,6 +28,8 @@ import shopOrderSlice from "./shop/order-slice/index";
 import shopSearchSlice from "./shop/search-slice/index";
 import shopReviewSlice from "./shop/review-slice/index";
 
+import commonFeatureSlice from "./common-slice/index";
+
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -51,6 +53,8 @@ export const store = configureStore({
     shopOrder: shopOrderSlice,
     shopSearch: shopSearchSlice,
     shopReview: shopReviewSlice,
+
+    commonFeature: commonFeatureSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

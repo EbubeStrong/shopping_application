@@ -14,6 +14,7 @@ function ProductImageUpload({
   imageLoadingState,
   setImageLoadingState,
   isEditMode,
+  adminDashboardStyling = false
 }) {
   const inputRef = useRef(null);
 
@@ -58,7 +59,7 @@ function ProductImageUpload({
       data
     );
 
-    console.log(response);
+    console.log(response, "image upload response");
 
     if (response?.data?.success) {
       // setUploadImageUrl(response.data.result.url);
@@ -72,7 +73,7 @@ function ProductImageUpload({
   }, [imageFile]);
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white ">
+    <div className={`w-full bg-white ${adminDashboardStyling ? "" : "max-w-md mx-auto"}` }>
       <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
 
       <div

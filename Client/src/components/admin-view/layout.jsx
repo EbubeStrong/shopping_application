@@ -39,7 +39,7 @@ function AdminLayout() {
         />
 
         <main
-          className="flex flex-col flex-1 bg-muted/40 px-4 lg:ml-64 pt-[7rem] overflow-auto z-10"
+          className="flex flex-col flex-1 bg-muted/40 px-4 lg:ml-64 pt-[6.5rem] overflow-auto z-10"
           // style={{  paddingTop: "6rem" }}
         >
           <Outlet

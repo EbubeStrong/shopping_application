@@ -1,4 +1,4 @@
-import { ChartNoAxesCombined, ChartPie } from "lucide-react";
+import { ChartNoAxesCombined, ChartPie, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LayoutDashboard, ShoppingBasket } from "lucide-react";
 // import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -8,6 +8,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "../../components/ui/sheet"; 
+import { Button } from "../ui/button";
 
 const adminSidebarMenuItems = [
   {
@@ -59,20 +60,37 @@ function AdminSideBar({ open, setOpen, setShowAddButton }) {
   const navigate = useNavigate();
   return (
     <>
-      <Sheet open={open} onOpenChange={setOpen} >
-        <SheetContent side="left" className="w-64 bg-white">
-          <div className="flex flex-col h-full">
-            <SheetHeader className="border-b">
-              <SheetTitle className="flex gap-2 mt-5 mb-5">
-                <ChartNoAxesCombined size={30} />
-                Admin Panel
-              </SheetTitle>
-            </SheetHeader>
+      {open && (
+            <div
+              className="fixed inset-0 bg-black/50 z-99"
+              onClick={() => setOpen(false)}
+            />
+          )}
 
-            <MenuItems setOpen={setOpen} setShowAddButton={setShowAddButton} />
+      <div
+            className={`fixed top-0 left-0 h-full w-80 bg-white z-[100] transform transition-transform duration-300 ease-in-out ${
+              open ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex gap-2 mt-5 mb-5">
+                <ChartNoAxesCombined size={30} />
+                <h1 className="font-bold text-2xl">Admin Panel</h1>
+              </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setOpen(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <MenuItems setOpen={setOpen} setShowAddButton={setShowAddButton} />
+
+              {/* <HeaderRightContent setIsSheetOpen={setIsSheetOpen} /> */}
+            </div>
           </div>
-        </SheetContent>
-      </Sheet>
 
       <aside className="hidden w-64 h-screen fixed z-[999] left-0 top-0 flex-col border-r bg-background p-6 lg:flex ">
         <div

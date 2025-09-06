@@ -20,7 +20,7 @@ import {
   WatchIcon,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAllFilteredProducts,
@@ -31,7 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "../../../store/shop/cart-slice";
 import { useToast } from "@/hooks/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/productDetails";
-// import { getFeatureImages } from "@/store/common-slice";
+import { getFeatureImages } from "../../../store/common-slice/index";
 
 // Categories heading with icons
 const categoriesWithIcon = [
@@ -58,12 +58,13 @@ function ShoppingHome() {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
-  // const { featureImageList } = useSelector((state) => state.commonFeature);
+  const { featureImageList } = useSelector((state) => state.commonFeature);
 
   const { cartItems } = useSelector((state) => state.shopCart);
   // console.log(cartItems, "cartItems from shopCart")
 
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const autoSlideRef = useRef(null);
 
   const { user } = useSelector((state) => state.auth);
 
@@ -106,7 +107,7 @@ function ShoppingHome() {
 
     if (productInCart && productInCart.quantity >= getProductInfo.totalStock) {
       toast({
-       title: `Only ${getProductInfo.totalStock} quantities can be added for this item`,
+        title: `Only ${getProductInfo.totalStock} quantities can be added for this item`,
         className: "bg-red-600 text-white",
       });
       return;
@@ -134,15 +135,30 @@ function ShoppingHome() {
     if (productDetails !== null) setOpenDetailsDialog(true);
   }, [productDetails]);
 
-  // Effect to change slides automatically every 3 seconds and to handle slide transitions
+  // Combine slides and backend images into a single array
+  const allSlides = [
+    ...slides.map((slide, index) => ({
+      main: slide,
+      bg: slidesBg[index] || slide, // use slidesBg if available, otherwise fallback
+    })),
+    ...(featureImageList || []).map((img) => ({
+      main: img.image,
+      bg: img.image, // backend images use the same image as blurred background
+    })),
+  ];
+
+  const resetAutoSlide = () => {
+    if (autoSlideRef.current) clearInterval(autoSlideRef.current);
+    autoSlideRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % allSlides.length);
+    }, 10000);
+  };
+
+  // Start auto-slide on mount
   useEffect(() => {
-    // Automatically change slides every 6 seconds
-    const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-      setCurrentSlideBg((prevSlide) => (prevSlide + 1) % slidesBg.length);
-    }, 6000);
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, [slides.length, slidesBg.length]);
+    resetAutoSlide();
+    return () => clearInterval(autoSlideRef.current);
+  }, [allSlides.length]);
 
   useEffect(() => {
     dispatch(
@@ -155,14 +171,24 @@ function ShoppingHome() {
 
   // console.log(productList, "productList");
 
-  // useEffect(() => {
-  //   dispatch(getFeatureImages());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(getFeatureImages());
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[500px] md:h-[800px] lg:h-[700px] pb-[2%]  overflow-hidden">
-        {slides.map((slide, index) => (
+      <div className="relative w-full h-[500px] md:h-[800px] lg:h-[700px] pb-[2%] overflow-hidden">
+        {[
+          ...slides.map((slide, index) => ({
+            main: slide,
+            bg: slidesBg[index] || slide, // fallback to slide if bg not provided
+          })),
+
+          ...(featureImageList || []).map((img) => ({
+            main: img.image,
+            bg: img.image, // backend images can use the same image for blurred bg
+          })),
+        ].map((slideItem, index) => (
           <div
             key={index}
             className={`${
@@ -171,17 +197,20 @@ function ShoppingHome() {
           >
             {/* Blurred background image */}
             <img
-              src={slidesBg[index]}
+              src={slideItem.bg}
               alt=""
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover filter blur-[30px] scale-110 animate-pan"
             />
 
+            {/* Light overlay */}
+            <div className="absolute inset-0 bg-black/60"></div>
+
             {/* Foreground centered image with glass background */}
             <div className="relative flex justify-center items-center w-full h-full">
               <div className="w-[60%] h-[50%] md:w-[50%] md:h-[60%] absolute top-[15%] bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl flex items-center justify-center">
                 <img
-                  src={slide}
+                  src={slideItem.main}
                   alt={`Slide ${index + 1}`}
                   className="w-[90%] h-[100%] md:h-[90%] object-contain z-10"
                 />
@@ -194,12 +223,18 @@ function ShoppingHome() {
         <Button
           variant="outline"
           size="icon"
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80 z-10"
-          onClick={() =>
+          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80 z-10 cursor-pointer"
+          onClick={() => (
             setCurrentSlide(
-              (prevSlide) => (prevSlide - 1 + slides.length) % slides.length
-            )
-          }
+              (prevSlide) =>
+                (prevSlide -
+                  1 +
+                  slides.length +
+                  (featureImageList?.length || 0)) %
+                (slides.length + (featureImageList?.length || 0))
+            ),
+            resetAutoSlide()
+          )}
         >
           <ChevronLeftIcon className="w-4 h-4" />
         </Button>
@@ -208,10 +243,15 @@ function ShoppingHome() {
         <Button
           variant="outline"
           size="icon"
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80 z-10"
-          onClick={() =>
-            setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length)
-          }
+          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80 z-10 cursor-pointer"
+          onClick={() => (
+            setCurrentSlide(
+              (prevSlide) =>
+                (prevSlide + 1) %
+                (slides.length + (featureImageList?.length || 0))
+            ),
+            resetAutoSlide()
+          )}
         >
           <ChevronRightIcon className="w-4 h-4" />
         </Button>

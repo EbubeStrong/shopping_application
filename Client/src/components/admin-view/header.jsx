@@ -12,13 +12,11 @@ function AdminHeader({
   openCreateProductsDialog,
   setOpenCreateProductsDialog,
   setShowButton,
-  showButton,
   showAddButton,
 }) {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
-
 
   const location = useLocation();
   const isProductsPage = location.pathname === "/admin/products";
