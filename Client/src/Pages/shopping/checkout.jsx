@@ -200,6 +200,7 @@ function ShoppingCheckout() {
         <Address 
         gridCols={2} 
         setCurrentSelectedAddress={setCurrentSelectedAddress}
+        currentSelectedAddress={currentSelectedAddress}
         />
 
         <div className="flex flex-col gap-4">

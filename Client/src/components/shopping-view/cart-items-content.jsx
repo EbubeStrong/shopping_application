@@ -72,6 +72,7 @@ function UserCartItemsContent({ cartItem }) {
     productIndex > -1 ? productList[productIndex]?.totalStock : getCartItem?.totalStock;
 
   const totalStock = Number(totalStockRaw);
+  
   if (!Number.isFinite(totalStock)) {
     console.warn("Missing totalStock", { productIndex, totalStockRaw, prodId });
     toast({

@@ -63,6 +63,19 @@ function CheckAuth({ isAuthenticated, user, children }) {
   //   return <Navigate to="/unauth-page" />;
   // }
 
+  //If visiting root path "/" 
+  if(location.pathname === '/'){
+    if(!isAuthenticated){
+      return <Navigate to="/auth/login" />
+    }else{
+      if(user?.role === "admin"){
+        return <Navigate to="/admin/dashboard" />
+      }else{
+        return <Navigate to="/shop/home" />
+      }
+    }
+  }
+
   // ✅ If authenticated and visiting "/auth/register" → Redirect to login
   if (isAuthenticated && location.pathname === "/auth/register") {
     return <Navigate to="/auth/login" replace />;

@@ -9,6 +9,7 @@ function AddressCard({
   handleDeleteAddress,
   handleEditAddress,
   setCurrentSelectedAddress,
+  currentSelectedAddress,
 }) {
   const { toast } = useToast();
 
@@ -30,7 +31,7 @@ function AddressCard({
             )
           : null
       }
-      className="flex flex-col justify-between cursor-pointer hover:shadow-md border hover:border-black"
+      className={`flex flex-col justify-between cursor-pointer hover:shadow-md border hover:border-black ${currentSelectedAddress === addressInfo?._id ? 'bg-gray-200 shadow-xl' : ''}`}
     >
       <CardContent className="grid p-4 gap-4">
         <Label>Address: {addressInfo?.address}</Label>

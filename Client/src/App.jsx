@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "../store/auth-slice/index";
 import { Skeleton } from "@/components/ui/skeleton";
-import PaypalReturnPage from "./Pages/shopping/paypal-return";
+import PaypalReturnPage from "./components/shopping-view/paypal-return";
 import PaymentSuccessPage from "./Pages/shopping/payment-success";
 import SearchProducts from "./Pages/shopping/search";
 
@@ -74,7 +74,15 @@ export default function App() {
           path="/"
           element={
             <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <Outlet /> {/* Ensures nested routes work properly */}
+            </CheckAuth>
+          }
+        />
+
+        {/* <Route
+          path="/"
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+              <Outlet />
             </CheckAuth>
           }
         >
@@ -82,8 +90,8 @@ export default function App() {
             <Route path="login" element={<AuthLogin />} />
             <Route path="register" element={<AuthRegister />} />
           </Route>
-        </Route>
-        ;
+        </Route> */}
+
         <Route
           path="/auth"
           element={
@@ -125,7 +133,9 @@ export default function App() {
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
         </Route>
+
         <Route path="/unauth-page" element={<UnAuthPage />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
