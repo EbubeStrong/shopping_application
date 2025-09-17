@@ -107,7 +107,7 @@ function ShoppingCheckout() {
         productId: singleCartItem?.productId,
         title: singleCartItem?.title,
         image: singleCartItem?.image,
-        price:
+        salePrice:
           singleCartItem?.salePrice > 0
             ? singleCartItem?.salePrice
             : singleCartItem?.price,

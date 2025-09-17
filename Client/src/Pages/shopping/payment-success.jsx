@@ -9,7 +9,7 @@ function PaymentSuccessPage() {
     <div>
       <Card className="relative border-none shadow-none">
         <CardHeader>
-          <CardTitle className="text-4xl">Processing Successful!</CardTitle>
+          <CardTitle className="text-4xl">Payment Successful!</CardTitle>
         </CardHeader>
 
         <Button 

@@ -143,15 +143,16 @@ function ShoppingHome() {
     })),
     ...(featureImageList || []).map((img) => ({
       main: img.image,
-      bg: img.image, // backend images use the same image as blurred background
+      bg: img.image, 
     })),
   ];
+
 
   const resetAutoSlide = () => {
     if (autoSlideRef.current) clearInterval(autoSlideRef.current);
     autoSlideRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % allSlides.length);
-    }, 10000);
+    }, 6000);
   };
 
   // Start auto-slide on mount
@@ -159,6 +160,8 @@ function ShoppingHome() {
     resetAutoSlide();
     return () => clearInterval(autoSlideRef.current);
   }, [allSlides.length]);
+
+
 
   useEffect(() => {
     dispatch(
@@ -207,7 +210,7 @@ function ShoppingHome() {
             <div className="absolute inset-0 bg-black/60"></div>
 
             {/* Foreground centered image with glass background */}
-            <div className="relative flex justify-center items-center w-full h-full">
+            <div className="relative flex justify-center items-center w-full z-10 h-full">
               <div className="w-[60%] h-[50%] md:w-[50%] md:h-[60%] absolute top-[15%] bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl flex items-center justify-center">
                 <img
                   src={slideItem.main}

@@ -12,6 +12,7 @@ const initialState = {
 export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData) => {
+    console.log("Order payload being sent from frontend:", orderData)
     const response = await axios.post(
       `http://localhost:3000/api/shop/order/create`,
       orderData
@@ -109,7 +110,7 @@ const shoppingOrderSlice = createSlice({
     })
     .addCase(getOrderDetails.fulfilled, (state, action) => {
         state.isLoading = false
-        console.log("getOrderDetails fulfilled:", action.payload)
+        // console.log("getOrderDetails fulfilled:", action.payload)
         state.orderDetails = action.payload.data
     })
     .addCase(getOrderDetails.rejected, (state, action) => {

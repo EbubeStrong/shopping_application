@@ -4,7 +4,7 @@ import AuthLayout from "./components/auth/layout";
 import AuthLogin from "./Pages/auth/login";
 import AuthRegister from "./Pages/auth/register";
 import AdminLayout from "./components/admin-view/layout";
-import AdminDashboard from "./Pages/admin/dashbord";
+import AdminDashboard from "./Pages/admin/dashboard";
 import AdminProducts from "./Pages/admin/products";
 import AdminOrders from "./Pages/admin/orders";
 import AdminFeatures from "./Pages/admin/features";

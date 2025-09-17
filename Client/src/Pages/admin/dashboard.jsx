@@ -81,12 +81,12 @@ function AdminDashboard() {
           : null}
       </div> */}
 
-      <div className="relative flex  mt-5 overflow-auto h-[500px] rounded-lg py-5">
+      <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4  mt-5 overflow-auto h-[500px] rounded-lg py-5">
   {featureImageList && featureImageList.length > 0
     ? featureImageList.map((featureImgItem) => (
         <div
           key={featureImgItem._id}
-          className="relative w-[40%] h-[100%] rounded-2xl flex flex-col items-center p-3 m-2 border"
+          className="relative w-[100%] h-[100%] rounded-2xl flex flex-col items-center p-3 m-2 border"
         >
           <img
             src={featureImgItem.image}

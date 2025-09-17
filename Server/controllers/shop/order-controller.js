@@ -301,11 +301,183 @@ const Cart = require("../../models/cart");
 const Product = require("../../models/products");
 
 // ✅ Create PayPal order
+// const createOrder = async (req, res) => {
+//   try {
+//     const {
+//       userId,
+//       cartItems,
+//       addressInfo,
+//       orderStatus,
+//       paymentStatus,
+//       paymentMethod,
+//       totalAmount,
+//       orderDate,
+//       orderUpdateDate,
+//       paymentId,
+//       payerId,
+//       cartId,
+//     } = req.body;
+
+//     // Build items for PayPal
+//     // const items = cartItems.map((item) => ({
+//     //   name: item.title,
+//     //   sku: item.productId,
+//     //   unit_amount: {
+//     //     currency_code: "USD",
+//     //     value: Number(item.salePrice).toFixed(2),
+//     //   },
+//     //   quantity: String(item.quantity),
+//     // }));
+
+//     // const itemTotal = items.reduce(
+//     //   (sum, it) => sum + Number(it.unit_amount.value) * Number(it.quantity),
+//     //   0
+//     // ).toFixed(2);
+
+//     const items = cartItems.map((item) => {
+//       const price =
+//         item.salePrice && item.salePrice > 0 ? item.salePrice : "";
+
+//       return {
+//         name: item.title,
+//         sku: item.productId,
+//         unit_amount: {
+//           currency_code: "USD",
+//           value: Number(price).toFixed(2),
+//         },
+//         quantity: String(item.quantity || 1),
+//       };
+//     });
+
+//     const itemTotal = items
+//       .reduce(
+//         (sum, it) => sum + Number(it.unit_amount.value) * Number(it.quantity),
+//         0
+//       )
+//       .toFixed(2);
+
+//     // const paypalClient = client();
+
+//     // Build request
+//     // const request = new paypal.orders.OrdersCreateRequest();
+//     // request.prefer("return=representation");
+//     // request.requestBody({
+//     //   intent: "CAPTURE",
+
+//     // application_context: {
+//     //   return_url:
+//     //     // process.env.PAYPAL_RETURN_URL ||
+//     //     `${"http://localhost:5000"}/paypal-return`,
+//     //   cancel_url:
+//     //     // process.env.PAYPAL_CANCEL_URL ||
+//     //     // process.env.PAYPAL_CANCEL_URL
+//     //     // `${process.env.CLIENT_URL || "http://localhost:5000"}/paypal-cancel`,
+//     //     `${"http://localhost:5000"}/paypal-cancel`,
+//     // },
+
+//     // application_context: {
+//     //   return_url: `${process.env.PAYPAL_RETURN_URL || "http://localhost:5000/paypal-return"}`,
+//     //   cancel_url: `${process.env.PAYPAL_CANCEL_URL || "http://localhost:5000/paypal-cancel"}`,
+//     // },
+
+//     //   application_context: {
+//     //     return_url: `${
+//     //       process.env.CLIENT_URL || "http://localhost:5173"
+//     //     }/shop/paypal-return`,
+//     //     cancel_url: `${
+//     //       process.env.CLIENT_URL || "http://localhost:5173"
+//     //     }/shop/paypal-cancel`,
+//     //   },
+
+//     //   purchase_units: [
+//     //     {
+//     //       amount: {
+//     //         currency_code: "USD",
+//     //         value: Number(totalAmount).toFixed(2),
+//     //         breakdown: {
+//     //           item_total: {
+//     //             currency_code: "USD",
+//     //             value: itemTotal,
+//     //           },
+//     //         },
+//     //       },
+//     //       items,
+//     //     },
+//     //   ],
+//     // });
+
+//     const request = new paypal.orders.OrdersCreateRequest();
+//     request.prefer("return=representation");
+//     request.requestBody({
+//       intent: "CAPTURE",
+//       application_context: {
+//         return_url: `${
+//           process.env.CLIENT_URL || "http://localhost:5173"
+//         }/shop/paypal-return`,
+//         cancel_url: `${
+//           process.env.CLIENT_URL || "http://localhost:5173"
+//         }/shop/paypal-cancel`,
+//       },
+//       purchase_units: [
+//         {
+//           amount: {
+//             currency_code: "USD",
+//             value: itemTotal, // must exactly equal breakdown.item_total.value
+//             breakdown: {
+//               item_total: {
+//                 currency_code: "USD",
+//                 value: itemTotal,
+//               },
+//             },
+//           },
+//           items,
+//         },
+//       ],
+//     });
+
+//     const response = await paypalClient.execute(request);
+//     const result = response.result;
+
+//     // Save to DB
+//     const newOrder = new Order({
+//       userId,
+//       cartItems: processedCartItems,
+//       addressInfo,
+//       orderStatus,
+//       paymentStatus,
+//       paymentMethod,
+//       totalAmount,
+//       orderDate,
+//       orderUpdateDate,
+//       paymentId: result.id, // store PayPal order ID
+//       payerId,
+//       cartId,
+//     });
+//     await newOrder.save();
+
+//     // Grab approval link
+//     const approvalURL = result.links.find((l) => l.rel === "approve")?.href;
+
+//     res.status(201).json({
+//       success: true,
+//       approvalURL,
+//       orderId: newOrder._id,
+//     });
+//   } catch (error) {
+//     console.error("Error while creating PayPal order:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: error.message || "Some error occurred while creating order",
+//     });
+//   }
+// };
+
+
 const createOrder = async (req, res) => {
   try {
     const {
       userId,
-      cartItems,
+      cartItems,      // array of { productId, title, image, price, quantity }
       addressInfo,
       orderStatus,
       paymentStatus,
@@ -318,111 +490,72 @@ const createOrder = async (req, res) => {
       cartId,
     } = req.body;
 
-    // Build items for PayPal
-    // const items = cartItems.map((item) => ({
-    //   name: item.title,
-    //   sku: item.productId,
-    //   unit_amount: {
-    //     currency_code: "USD",
-    //     value: Number(item.salePrice).toFixed(2),
-    //   },
-    //   quantity: String(item.quantity),
-    // }));
+    // ✅ Fetch salePrice from Product collection
+    // const processedCartItems = await Promise.all(
+    //   cartItems.map(async (item) => {
+    //     const product = await Product.findById(item.productId);
 
-    // const itemTotal = items.reduce(
-    //   (sum, it) => sum + Number(it.unit_amount.value) * Number(it.quantity),
-    //   0
-    // ).toFixed(2);
+    //     if (!product) {
+    //       throw new Error(`Product not found for ID ${item.productId}`);
+    //     }
 
-    const items = cartItems.map((item) => {
-      const price =
-        item.salePrice && item.salePrice > 0 ? item.salePrice : item.price;
+    //     return {
+    //       productId: item.productId,
+    //       title: item.title,
+    //       image: item.image,
+    //       price: product.price,
+    //       salePrice: product.salePrice && product.salePrice > 0 ? product.salePrice : product.price,
+    //       quantity: item.quantity || 1,
+    //     };
+    //   })
+    // );
 
-      return {
-        name: item.title,
-        sku: item.productId,
-        unit_amount: {
-          currency_code: "USD",
-          value: Number(price).toFixed(2),
-        },
-        quantity: String(item.quantity || 1),
-      };
-    });
+    const processedCartItems = cartItems.map((item) => {
+  // Ensure salePrice exists and is valid
+  let finalSalePrice =
+    item.salePrice !== undefined && item.salePrice > 0
+      ? item.salePrice
+      : item.price; // fallback to regular price if not provided
 
-    const itemTotal = items
-      .reduce(
-        (sum, it) => sum + Number(it.unit_amount.value) * Number(it.quantity),
-        0
-      )
+  return {
+    productId: item.productId,
+    title: item.title,
+    image: item.image,
+    price: item.price,
+    salePrice: finalSalePrice,
+    quantity: item.quantity || 1,
+  };
+})
+
+    // Calculate total for PayPal
+    const itemTotal = processedCartItems
+      .reduce((sum, it) => sum + Number(it.salePrice) * Number(it.quantity), 0)
       .toFixed(2);
 
-    // const paypalClient = client();
-
-    // Build request
-    // const request = new paypal.orders.OrdersCreateRequest();
-    // request.prefer("return=representation");
-    // request.requestBody({
-    //   intent: "CAPTURE",
-
-    // application_context: {
-    //   return_url:
-    //     // process.env.PAYPAL_RETURN_URL ||
-    //     `${"http://localhost:5000"}/paypal-return`,
-    //   cancel_url:
-    //     // process.env.PAYPAL_CANCEL_URL ||
-    //     // process.env.PAYPAL_CANCEL_URL
-    //     // `${process.env.CLIENT_URL || "http://localhost:5000"}/paypal-cancel`,
-    //     `${"http://localhost:5000"}/paypal-cancel`,
-    // },
-
-    // application_context: {
-    //   return_url: `${process.env.PAYPAL_RETURN_URL || "http://localhost:5000/paypal-return"}`,
-    //   cancel_url: `${process.env.PAYPAL_CANCEL_URL || "http://localhost:5000/paypal-cancel"}`,
-    // },
-
-    //   application_context: {
-    //     return_url: `${
-    //       process.env.CLIENT_URL || "http://localhost:5173"
-    //     }/shop/paypal-return`,
-    //     cancel_url: `${
-    //       process.env.CLIENT_URL || "http://localhost:5173"
-    //     }/shop/paypal-cancel`,
-    //   },
-
-    //   purchase_units: [
-    //     {
-    //       amount: {
-    //         currency_code: "USD",
-    //         value: Number(totalAmount).toFixed(2),
-    //         breakdown: {
-    //           item_total: {
-    //             currency_code: "USD",
-    //             value: itemTotal,
-    //           },
-    //         },
-    //       },
-    //       items,
-    //     },
-    //   ],
-    // });
+    // Build PayPal request
+    const itemsForPayPal = processedCartItems.map((item) => ({
+      name: item.title,
+      sku: item.productId,
+      unit_amount: {
+        currency_code: "USD",
+        value: Number(item.salePrice).toFixed(2),
+      },
+      quantity: String(item.quantity),
+    }));
 
     const request = new paypal.orders.OrdersCreateRequest();
     request.prefer("return=representation");
     request.requestBody({
       intent: "CAPTURE",
       application_context: {
-        return_url: `${
-          process.env.CLIENT_URL || "http://localhost:5173"
-        }/shop/paypal-return`,
-        cancel_url: `${
-          process.env.CLIENT_URL || "http://localhost:5173"
-        }/shop/paypal-cancel`,
+        return_url: `${process.env.CLIENT_URL || "http://localhost:5173"}/shop/paypal-return`,
+        cancel_url: `${process.env.CLIENT_URL || "http://localhost:5173"}/shop/paypal-cancel`,
       },
       purchase_units: [
         {
           amount: {
             currency_code: "USD",
-            value: itemTotal, // must exactly equal breakdown.item_total.value
+            value: itemTotal,
             breakdown: {
               item_total: {
                 currency_code: "USD",
@@ -430,7 +563,7 @@ const createOrder = async (req, res) => {
               },
             },
           },
-          items,
+          items: itemsForPayPal,
         },
       ],
     });
@@ -438,10 +571,10 @@ const createOrder = async (req, res) => {
     const response = await paypalClient.execute(request);
     const result = response.result;
 
-    // Save to DB
+    // Save order to DB
     const newOrder = new Order({
       userId,
-      cartItems,
+      cartItems: processedCartItems,
       addressInfo,
       orderStatus,
       paymentStatus,
@@ -449,13 +582,12 @@ const createOrder = async (req, res) => {
       totalAmount,
       orderDate,
       orderUpdateDate,
-      paymentId: result.id, // store PayPal order ID
+      paymentId: result.id, // PayPal order ID
       payerId,
       cartId,
     });
     await newOrder.save();
 
-    // Grab approval link
     const approvalURL = result.links.find((l) => l.rel === "approve")?.href;
 
     res.status(201).json({
@@ -471,6 +603,9 @@ const createOrder = async (req, res) => {
     });
   }
 };
+
+
+
 
 // ✅ Capture PayPal order
 // const capturePayment = async (req, res) => {
@@ -781,6 +916,7 @@ const getAllOrdersByUser = async (req, res) => {
 const getAllOrderDetails = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id, "id")
 
     const order = await Order.findById(id);
 
@@ -795,6 +931,8 @@ const getAllOrderDetails = async (req, res) => {
       success: true,
       data: order,
     });
+
+
   } catch (error) {
     console.error("Error while getting all PayPal order details:", error);
     res.status(500).json({

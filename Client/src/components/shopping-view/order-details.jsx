@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 function ShoppingOrderDetailsView({ orderDetails }) {
   const {user} = useSelector(state => state.auth)
-  // console.log(user)
+  console.log(orderDetails, "OrderDetails")
   return (
     <>
       <DialogTitle></DialogTitle>
@@ -74,6 +74,7 @@ function ShoppingOrderDetailsView({ orderDetails }) {
 
                 <ul className="grid-gap-3">
                   {orderDetails?.cartItems && orderDetails?.cartItems.length > 0 ? orderDetails?.cartItems.map((item, key) => (
+                    // console.log(item),
                      <li key={key} className="flex items-center justify-between">
                      <span className="w-full">Title: {item?.title}</span>
                      <div className="flex flex-col items-center justify-center w-full">
