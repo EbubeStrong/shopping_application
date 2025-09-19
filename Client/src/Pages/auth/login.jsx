@@ -26,7 +26,7 @@ function AuthLogin() {
       if (data?.payload?.success) {
         toast({
           title: data?.payload?.message,
-          className: "bg-white",
+          className: "bg-white text-black",
         });
       } else {
         toast({

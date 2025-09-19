@@ -39,7 +39,7 @@ const   AuthRegister = () => {
           toast({
             title: data.message || "Registration failed",
             variant: "destructive",
-            className: "bg-red-700"
+            className: "bg-red-700 text-white"
           });
         }
       })
