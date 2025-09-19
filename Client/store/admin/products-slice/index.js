@@ -8,10 +8,10 @@ const initialState = {
 };
 
 export const addNewProduct = createAsyncThunk(
-  "/products/addnewproduct",
+  "/products/addNewproduct",
   async (formData) => {
     const result = await axios.post(
-      "http://localhost:3000/api/admin/products/add",
+      `${import.meta.env.VITE_API_URL}/api/admin/products/add`,
       formData,
       {
         headers: {
@@ -27,7 +27,7 @@ export const fetchAllProducts = createAsyncThunk(
   "/products/fetchAllProducts",
   async () => {
     const result = await axios.get(
-      "http://localhost:3000/api/admin/products/get"
+      `${import.meta.env.VITE_API_URL}/api/admin/products/get`
     );
     // console.log(result, "result")
     return result?.data;
@@ -40,7 +40,7 @@ export const editProduct = createAsyncThunk(
     try {
       console.log("🚀 API Call: Editing product", id, formData);
       const result = await axios.put(
-        `http://localhost:3000/api/admin/products/edit/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/admin/products/edit/${id}`,
         formData,
         {
           headers: { "Content-Type": "application/json" },
@@ -48,7 +48,7 @@ export const editProduct = createAsyncThunk(
       );
       return result.data;
     } catch (error) {
-      console.error("❌ Edit error in thunk:", error);
+      console.error(" Edit error in thunk:", error);
 
       console.log("👉 Returning rejection:", error.response?.data || "Edit failed");
       return rejectWithValue(error.response?.data || "Edit failed");
@@ -64,11 +64,11 @@ export const deleteProduct = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const result = await axios.delete(
-        `http://localhost:3000/api/admin/products/delete/${id}`
+        `${import.meta.env.VITE_API_URL}/api/admin/products/delete/${id}`
       );
       return result?.data;
     } catch (error) {
-      console.error("❌ Delete product failed:", error);
+      console.error(" Delete product failed:", error);
       return rejectWithValue(error.response?.data || "Error deleting product");
     }
   }

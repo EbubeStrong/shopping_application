@@ -13,7 +13,7 @@ export const registerUser = createAsyncThunk(
 
   async (formData) => {
     const response = await axios.post(
-      "http://localhost:3000/api/auth/register",
+      `${import.meta.env.VITE_API_URL}/api/auth/register`,
       formData,
       {
         withCredentials: true,
@@ -29,7 +29,7 @@ export const loginUser = createAsyncThunk(
 
   async (formData) => {
     const response = await axios.post(
-      "http://localhost:3000/api/auth/login",
+      `${import.meta.env.VITE_API_URL}/api/auth/login`,
       formData,
       {
         withCredentials: true,
@@ -44,7 +44,7 @@ export const logoutUser = createAsyncThunk(
   "/auth/logout",
 
   async () => {
-    const response = await axios.post("http://localhost:3000/api/auth/logout", {},
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {},
       {
       withCredentials: true,
     });
@@ -52,38 +52,18 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-// CheckAuth
-// export const checkAuth = createAsyncThunk(
-//   "/auth/checkauth",
-
-//   async () => {
-//     const response = await axios.get(
-//       "http://localhost:3000/api/auth/check-auth",
-//       {
-//         withCredentials: true,
-//         headers: {
-//           "Cache-Control":
-//             "no-store, no-cache, must-revalidate, proxy-revalidate",
-//           // Expires: '0'
-//         },
-//       }
-//     );
-//     return response?.data;
-//   }
-// );
-
 
 export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
-  // ✅ Read from local storage first
+  // Read from local storage first
   const storedUser = localStorage.getItem("auth");
 
   if (storedUser) {
     return { success: true, user: JSON.parse(storedUser) }; 
   }
 
-  // ✅ Otherwise, check with the API
+  // Otherwise, check with the API
   const response = await axios.get(
-    "http://localhost:3000/api/auth/check-auth",
+    `${import.meta.env.VITE_API_URL}/api/auth/check-auth`,
     {
       withCredentials: true,
       headers: {
@@ -109,52 +89,29 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // builder
-    //   .addCase(registerUser.pending, (state) => {
-    //     state.isLoading = true
-    //   })
-    //   .addCase(registerUser.fulfilled, (state, action) => {
-    //     state.isLoading = false
-    //     state.user = null
-    //     state.isAuthenticated = true
-    //   })
-    //   .addCase(registerUser.rejected, (state, action) => {
-    //     state.isLoading = false
-    //     state.user = action.payload.user;
-    //     state.isAuthenticated = false
-    //     state.error = action.payload || "Registration failed";
-    //   })
     builder
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user || null; // ✅ Store user info if needed
+        state.user = action.payload.user || null; // Store user info if needed
         state.isAuthenticated = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
-        state.error = action.payload || "Registration failed"; // ✅ Store error message
+        state.error = action.payload || "Registration failed"; // Store error message
       })
 
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
-      // .addCase(loginUser.fulfilled, (state, action) => {
-      //    console.log("Login API Response:", action.payload);
-      //   console.log(action);
-      //   state.isLoading = false;
-      //   state.user = !action.payload.success ? null : action.payload.user;
-      //   state.isAuthenticated = !action.payload.success ? false : true;
-      //   localStorage.setItem("auth", JSON.stringify(action.payload.user));
-      // })
 
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log("Login API Response:", action.payload); // ✅ Check full API response
-        console.log("User from API:", action.payload.user); // ✅ Debugging user object
+        console.log("Login API Response:", action.payload); // Check full API response
+        console.log("User from API:", action.payload.user); // Debugging user object
 
           state.isLoading = false;
 
@@ -168,7 +125,7 @@ const authSlice = createSlice({
               email: action.payload.user.email,
               role: action.payload.user.role,
               id: action.payload.user.id,
-              userName: action.payload.user.userName, // ✅ Ensure it's stored
+              userName: action.payload.user.userName, // Ensure it's stored
             })
           );
         } else {
@@ -177,22 +134,6 @@ const authSlice = createSlice({
 
         }
       })
-
-      // .addCase(loginUser.fulfilled, (state, action) => {
-      //   console.log("Login Response:", action);
-      //   state.isLoading = false;
-
-      //   if (action.payload.success) {
-      //     state.user = action.payload.user;
-      //     state.isAuthenticated = true;
-
-      //     // ✅ Store auth data only if login is successful
-      //     localStorage.setItem("auth", JSON.stringify(action.payload.user));
-      //   } else {
-      //     state.user = null;
-      //     state.isAuthenticated = false;
-      //   }
-      // })
 
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -228,11 +169,11 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
 
-        // ✅ Clear authentication data from storage
+        // Clear authentication data from storage
         localStorage.removeItem("auth"); // Adjust if using a different key
         sessionStorage.removeItem("auth");
 
-        // ✅ Optionally, reload the page to ensure state is reset
+        // Optionally, reload the page to ensure state is reset
         // window.location.href = "/auth/login";
       })
       .addCase(logoutUser.rejected, (state, action) => {
