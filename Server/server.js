@@ -19,9 +19,10 @@ const shopReviewRouter = require("./routes/shop/review-routes.js")
 
 const commonFeatureRouter = require("./routes/common/feature-routes.js")
 
+
 mongoose
   .connect(
-    process.env.MONGODB_URI 
+    process.env.MONGODB_URL 
   )
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
@@ -33,7 +34,7 @@ const PORT = process.env.PORT;
 
 app.use(
   cors({
-    origin: process.env.CLIENT_BASE_URL,
+    origin: [process.env.CLIENT_BASE_URL, "http://localhost:5000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "Content-Type",

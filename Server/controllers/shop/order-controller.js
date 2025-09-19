@@ -60,8 +60,8 @@ const createOrder = async (req, res) => {
     request.requestBody({
       intent: "CAPTURE",
       application_context: {
-        return_url: `${process.env.CLIENT_BASE_URL}/shop/paypal-return`,
-        cancel_url: `${process.env.CLIENT_BASE_URL}/shop/paypal-cancel`,
+        return_url: `${process.env.CLIENT_BASE_URL || "http://localhost:5000"}/shop/paypal-return`,
+        cancel_url: `${process.env.CLIENT_BASE_URL || "http://localhost:5000"}/shop/paypal-cancel`,
       },
       purchase_units: [
         {
