@@ -19,29 +19,6 @@ const   AuthRegister = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // function onSubmit(e) {
-  //   e.preventDefault();
-  //   dispatch(registerUser(formData))
-  //     .unwrap()
-  //     .then((data) => {
-  //       console.log("Register Response:", data);
-
-  //       if (data?.payload?.success) {
-  //         toast({
-  //           title: data?.payload?.message,
-  //         });
-  //         navigate("/auth/login");
-  //       } else {
-  //         toast({
-  //           title: data?.payload?.message,
-  //           variant: "destructive",
-  //         });
-  //       }
-  //     });
-  // }
-  // console.log(formData);
-  // console.log("Dispatching Register:", formData);
-
   function onSubmit(e) {
     e.preventDefault();
 

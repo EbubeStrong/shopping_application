@@ -25,18 +25,6 @@ const registerUser = async (req, res) => {
     });
 
     await newUser.save();
-//     res.status(200).json({
-//       success: true,
-//       message: "Registration Successful",
-//     })
-//   } catch (e) {
-//     console.error("Error in registerUser:", e);
-//     res.status(500).json({
-//       success: false,
-//       message: "Some error occured",
-//     });
-//   }
-    // };
 
     
         // Generate JWT token
@@ -105,9 +93,21 @@ const loginUser = async (req, res) => {
     );
 
     // Send token as HTTP-only cookie
-    res.cookie("token", token, { httpOnly: true, secure: false }).json({
+    // res.cookie("token", token, { httpOnly: true, secure: false }).json({
+    //   success: true,
+    //   message: "Logged in successfully",
+    //   user: {
+    //     email: checkUser.email,
+    //     role: checkUser.role,
+    //     id: checkUser._id,
+    //     userName: checkUser.userName,
+    //   },
+    // });
+
+    res.status(200).json({
       success: true,
       message: "Logged in successfully",
+      token,
       user: {
         email: checkUser.email,
         role: checkUser.role,
@@ -116,45 +116,11 @@ const loginUser = async (req, res) => {
       },
     });
 
-    console.log("Response User:", {
-      email: checkUser.email,
-      role: checkUser.role,
-      id: checkUser._id,
-      userName: checkUser.userName, // ✅ Debugging log
-    });
-
-
-    // Generate Access Token (Short-lived)
-    // const accessToken = jwt.sign(
-    //   { id: checkUser._id, email: checkUser.email, role: checkUser.role, userName: checkUser.userName },
-    //   "CLIENT_SECRET_KEY",
-    //   { expiresIn: "60m" } // ✅ Short-lived token
-    // );
-
-    // // Generate Refresh Token (Long-lived)
-    // const refreshToken = jwt.sign(
-    //   { id: checkUser._id },
-    //   "REFRESH_SECRET_KEY",
-    //   { expiresIn: "7d" } // ✅ Lasts for 7 days
-    // );
-
-    // // Store refresh token in cookies
-    // res.cookie("refreshToken", refreshToken, {
-    //   httpOnly: true,
-    //   secure: false, 
-    //   sameSite: "strict",
-    // });
-
-    // res.json({
-    //   success: true,
-    //   message: "Logged in successfully",
-    //   accessToken, // Send access token in response
-    //   user: {
-    //     email: checkUser.email,
-    //     role: checkUser.role,
-    //     id: checkUser._id,
-    //     userName: checkUser.userName,
-    //   },
+    // console.log("Response User:", {
+    //   email: checkUser.email,
+    //   role: checkUser.role,
+    //   id: checkUser._id,
+    //   userName: checkUser.userName, //  Debugging log
     // });
 
 
@@ -179,7 +145,9 @@ const logoutUser = (req, res) => {
 // auth middleware
 const authMiddleware = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    // const token = req.cookies.token;
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
     if (!token) {
       return res.status(401).json({
         success: false,

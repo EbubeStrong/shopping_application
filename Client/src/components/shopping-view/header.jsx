@@ -31,7 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { logoutUser } from "../../../store/auth-slice";
+import { logoutUser, resetTokenAndCredentials } from "../../../store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { useEffect, useState } from "react";
 import { fetchCartItems } from "../../../store/shop/cart-slice";
@@ -94,21 +94,24 @@ function HeaderRightContent({ setIsSheetOpen }) {
 
   function handleLogout() {
     // handle logout
-    dispatch(logoutUser()).then((data) => {
-      if (data?.payload?.success) {
-        toast({
-          title: data?.payload?.message,
-          className: "bg-white",
-        });
-        // navigate("/auth/login");
-      }
-      // else {
-      //   toast({
-      //     title: data?.payload?.message,
-      //     variant: "destructive"
-      //   });
-      // }
+    // dispatch(logoutUser()).then((data) => {
+    //   if (data?.payload?.success) {
+    //     toast({
+    //       title: data?.payload?.message,
+    //       className: "bg-white",
+    //     });
+    //     // navigate("/auth/login");
+    //   }
+    // });
+
+    dispatch(resetTokenAndCredentials()).then(() => {
+      toast({
+        title: "Logged out successfully",
+        className: "bg-white",
+      });
     });
+    sessionStorage.clear()
+    navigate("/auth/login");
   }
 
   useEffect(() => {

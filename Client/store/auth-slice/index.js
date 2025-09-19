@@ -3,9 +3,9 @@ import axios from "axios";
 
 const initialState = {
   isAuthenticated: false,
-  // isAuthenticated: true,
   isLoading: false,
   user: null,
+  token: null
 };
 
 export const registerUser = createAsyncThunk(
@@ -53,13 +53,13 @@ export const logoutUser = createAsyncThunk(
 );
 
 
-export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
-  // Read from local storage first
-  const storedUser = localStorage.getItem("auth");
+export const checkAuth = createAsyncThunk("/auth/checkauth", async (token) => {
+  // // Read from local storage first
+  // const storedUser = localStorage.getItem("auth");
 
-  if (storedUser) {
-    return { success: true, user: JSON.parse(storedUser) }; 
-  }
+  // if (storedUser) {
+  //   return { success: true, user: JSON.parse(storedUser) }; 
+  // }
 
   // Otherwise, check with the API
   const response = await axios.get(
@@ -67,6 +67,7 @@ export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
     {
       withCredentials: true,
       headers: {
+        Authorization: `Bearer ${token}`,
         "Cache-Control":
           "no-store, no-cache, must-revalidate, proxy-revalidate",
       },
@@ -87,6 +88,11 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = !!action.payload;
     },
+    resetTokenAndCredentials: (state) => {
+      state.token = null;
+      state.isAuthenticated = false;
+      state.user = null;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -110,24 +116,24 @@ const authSlice = createSlice({
       })
 
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log("Login API Response:", action.payload); // Check full API response
-        console.log("User from API:", action.payload.user); // Debugging user object
 
           state.isLoading = false;
 
         if (action.payload.success) {
           state.user = action.payload.user;
           state.isAuthenticated = true;
+          state.token = action.payload.token
+          sessionStorage.setItem('token', JSON.stringify(action.payload.token))
 
-          localStorage.setItem(
-            "auth",
-            JSON.stringify({
-              email: action.payload.user.email,
-              role: action.payload.user.role,
-              id: action.payload.user.id,
-              userName: action.payload.user.userName, // Ensure it's stored
-            })
-          );
+          // localStorage.setItem(
+          //   "auth",
+          //   JSON.stringify({
+          //     email: action.payload.user.email,
+          //     role: action.payload.user.role,
+          //     id: action.payload.user.id,
+          //     userName: action.payload.user.userName,    
+          //   })
+          // );
         } else {
           state.user = null;
           state.isAuthenticated = false;
@@ -140,6 +146,7 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.error = action.error?.message || "Login failed";
+        state.token =  null
       })
 
       .addCase(checkAuth.pending, (state) => {
@@ -183,6 +190,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, resetTokenAndCredentials } = authSlice.actions;
 
 export default authSlice.reducer;

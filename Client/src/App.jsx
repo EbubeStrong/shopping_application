@@ -25,36 +25,20 @@ import PaymentSuccessPage from "./Pages/shopping/payment-success";
 import SearchProducts from "./Pages/shopping/search";
 
 export default function App() {
-  // const isAuthenticated = false
-  // const user = null
-
-  // const isAuthenticated = true;
-  // const user = {
-  //   name : 'Samuel',
-  //   role : 'admin'
-  // }
 
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
   );
-  // console.log(user, isAuthenticated, "userName", "isAuthenticated")
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(checkAuth());
+    const token = JSON.parse(sessionStorage.getItem("token"));
+    dispatch(checkAuth(token));
   }, [dispatch]);
 
   if (isLoading)
     return (
-      // <Skeleton className="w-[100px] h-[20px] rounded-full" />;
       <div className="flex justify-center items-center h-screen">
-        {/* <div className="flex items-center space-x-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
-        </div>
-      </div> */}
 
         <div className="flex flex-col space-y-3">
           <Skeleton className="h-[125px] w-[250px] rounded-xl" />
@@ -69,7 +53,6 @@ export default function App() {
   return (
     <div className="flex flex-col">
       <Routes>
-        {/* <Route path="/" element={ } /> */}
         <Route
           path="/"
           element={
@@ -77,20 +60,6 @@ export default function App() {
             </CheckAuth>
           }
         />
-
-        {/* <Route
-          path="/"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <Outlet />
-            </CheckAuth>
-          }
-        >
-          <Route path="/" element={<AuthLayout />}>
-            <Route path="login" element={<AuthLogin />} />
-            <Route path="register" element={<AuthRegister />} />
-          </Route>
-        </Route> */}
 
         <Route
           path="/auth"

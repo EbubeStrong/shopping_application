@@ -27,20 +27,22 @@ function AdminHeader({
 
   function handleLogout() {
     // handle logout
-    dispatch(logoutUser()).then((data) => {
-      if (data?.payload?.success) {
-        toast({
-          title: data?.payload?.message,
+    // dispatch(logoutUser()).then((data) => {
+    //   if (data?.payload?.success) {
+    //     toast({
+    //       title: data?.payload?.message,
+    //     });
+    //     navigate("/auth/login");
+    //   }
+    // }
+     dispatch(resetTokenAndCredentials()).then(() => {
+          toast({
+            title: "Logged out successfully",
+            className: "bg-white",
+          });
         });
+        sessionStorage.clear()
         navigate("/auth/login");
-      }
-      // else {
-      //   toast({
-      //     title: data?.payload?.message,
-      //     variant: "destructive"
-      //   });
-      // }
-    });
   }
   return (
     <header className="flex items-center justify-between px-4 py-3 bg-white border-b fixed top-0 z-50 w-full ">

@@ -14,91 +14,46 @@ const initialState = {
 };
 
 
-const AuthLogin = () => {
+function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
-  const dispatch = useDispatch()
-  const { toast } = useToast()
-  const navigate = useNavigate();
-  
+  const dispatch = useDispatch();
+  const { toast } = useToast();
 
-  
-//   async function onSubmit(e) {
-//   e.preventDefault();
-  
-//   try {
-    // const data = await dispatch(loginUser(formData)).unwrap();
+  function onSubmit(event) {
+    event.preventDefault();
 
-//     if (data?.payload?.success) {
-//       toast({
-//         title: data.payload.message,
-//       });
-//       navigate("/auth/register");  // Uncomment if you want redirection
-//     } else {
-//       toast({
-//         title: data?.payload?.message || "An error occurred",
-//         variant: "destructive",
-//       });
-//     }
-//   } catch (error) {
-//     console.error("Login error:", error);
-//     toast({
-//       title: "Something went wrong. Please try again.",
-//       variant: "destructive",
-//     });
-//   }
-// }
-
-async function onSubmit(e) {
-  e.preventDefault();
-
-  try {
-    // unwrap() returns the fulfilled payload directly
-    const data = await dispatch(loginUser(formData)).unwrap();
-
-    if (data?.success) {
-      toast({
-        title: data.message,
-        className: "bg-white text-green-500"
-      });
-      navigate("/auth/register"); // Uncomment if you want redirection
-    } else {
-      toast({
-        title: data?.message || "An error occurred",
-        variant: "destructive",
-        className: "bg-red-700"
-      });
-    }
-  } catch (error) {
-    console.error("Login error:", error);
-    toast({
-      title: "Something went wrong. Please try again.",
-      variant: "destructive",
-      className: "bg-red-700"
+    dispatch(loginUser(formData)).then((data) => {
+      if (data?.payload?.success) {
+        toast({
+          title: data?.payload?.message,
+          className: "bg-white",
+        });
+      } else {
+        toast({
+          title: data?.payload?.message,
+          variant: "destructive",
+          className: "bg-red-600 text-white",
+        });
+      }
     });
   }
-}
-
-
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-light text-foreground">
-          Sign in to your Account
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Sign in to your account
         </h1>
-
-        <div className="flex items-center justify-center mt-2">
-          <p>Don't have an account</p>
-
+        <p className="mt-2">
+          Don't have an account
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/register"
           >
             Register
           </Link>
-        </div>
+        </p>
       </div>
-
       <CommonForm
         formControls={loginFormControls}
         buttonText={"Sign In"}
@@ -108,6 +63,6 @@ async function onSubmit(e) {
       />
     </div>
   );
-};
+}
 
 export default AuthLogin;
