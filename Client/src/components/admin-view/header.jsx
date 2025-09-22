@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "../../../store/auth-slice";
+import { logoutUser, resetTokenAndCredentials } from "../../../store/auth-slice";
 import { useLocation } from "react-router-dom";
 
 function AdminHeader({
@@ -44,6 +44,8 @@ function AdminHeader({
         sessionStorage.clear()
         navigate("/auth/login");
   }
+
+  
   return (
     <header className="flex items-center justify-between px-4 py-3 bg-white border-b fixed top-0 z-50 w-full ">
       <Button onClick={() => setOpen(true)} className="lg:hidden sm:block">
