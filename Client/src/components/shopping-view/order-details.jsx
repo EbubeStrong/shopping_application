@@ -10,7 +10,9 @@ function ShoppingOrderDetailsView({ orderDetails }) {
   console.log(orderDetails, "OrderDetails")
   return (
     <>
-      <DialogTitle></DialogTitle>
+      <DialogTitle>
+        <span className="text-2xl font-bold">Order Details</span>
+      </DialogTitle>
       <DialogContent
         className="sm:max-w-[600px] "
         style={{ backgroundColor: "white" }}
