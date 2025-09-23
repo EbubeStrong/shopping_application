@@ -57,7 +57,7 @@ const commonSlice = createSlice({
       .addCase(getFeatureImages.fulfilled, (state, action) => {
         state.isLoading = false;
         state.featureImageList = action.payload.data;
-        console.log(state.featureImageList, "getFeatureImages")
+        // console.log(state.featureImageList, "getFeatureImages")
       })
       .addCase(getFeatureImages.rejected, (state) => {
         state.isLoading = false;

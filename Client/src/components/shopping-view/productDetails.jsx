@@ -24,7 +24,7 @@ function ProductDetailsDialog({
 
   const { user } = useSelector((state) => state.auth);
   const { reviews } = useSelector((state) => state.shopReview);
-  console.log(reviews, "reviews");
+  // console.log(reviews, "reviews");
   // console.log(user, "user");
 
   const dispatch = useDispatch();
