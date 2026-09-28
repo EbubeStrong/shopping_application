@@ -53,29 +53,53 @@ export const logoutUser = createAsyncThunk(
 );
 
 
-export const checkAuth = createAsyncThunk("/auth/checkauth", async (token) => {
-  // // Read from local storage first
-  // const storedUser = localStorage.getItem("auth");
+// export const checkAuth = createAsyncThunk("/auth/checkauth", async (token) => {
+//   // // Read from local storage first
+//   // const storedUser = localStorage.getItem("auth");
 
-  // if (storedUser) {
-  //   return { success: true, user: JSON.parse(storedUser) }; 
-  // }
+//   // if (storedUser) {
+//   //   return { success: true, user: JSON.parse(storedUser) }; 
+//   // }
 
-  // Otherwise, check with the API
-  const response = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/auth/check-auth`,
-    {
-      withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Cache-Control":
-          "no-store, no-cache, must-revalidate, proxy-revalidate",
-      },
+//   // Otherwise, check with the API
+//   const response = await axios.get(
+//     `${import.meta.env.VITE_API_URL}/api/auth/check-auth`,
+//     {
+//       withCredentials: true,
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Cache-Control":
+//           "no-store, no-cache, must-revalidate, proxy-revalidate",
+//       },
+//     }
+//   );
+
+export const checkAuth = createAsyncThunk(
+  "/auth/checkauth",
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/auth/check-auth`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Cache-Control":
+              "no-store, no-cache, must-revalidate, proxy-revalidate",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || {
+          success: false,
+          message: "Authentication failed",
+        }
+      );
     }
-  );
-
-  return response?.data;
-});
+  }
+);
 
 
 

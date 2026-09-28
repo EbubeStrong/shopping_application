@@ -31,10 +31,19 @@ export default function App() {
   );
 
   const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   const token = JSON.parse(sessionStorage.getItem("token"));
+  //   dispatch(checkAuth(token));
+  // }, [dispatch]);
+
   useEffect(() => {
-    const token = JSON.parse(sessionStorage.getItem("token"));
+  const token = sessionStorage.getItem("token");
+
+  if (token) {
     dispatch(checkAuth(token));
-  }, [dispatch]);
+  }
+}, [dispatch]);
 
   if (isLoading)
     return (

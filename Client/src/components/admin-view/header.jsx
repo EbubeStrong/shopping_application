@@ -25,25 +25,38 @@ function AdminHeader({
     if (!openCreateProductsDialog) setShowButton(true);
   }, [openCreateProductsDialog]);
 
+  // function handleLogout() {
+  //   // handle logout
+  //   // dispatch(logoutUser()).then((data) => {
+  //   //   if (data?.payload?.success) {
+  //   //     toast({
+  //   //       title: data?.payload?.message,
+  //   //     });
+  //   //     navigate("/auth/login");
+  //   //   }
+  //   // }
+  //    dispatch(resetTokenAndCredentials()).then(() => {
+  //         toast({
+  //           title: "Logged out successfully",
+  //           className: "bg-white",
+  //         });
+  //       });
+  //       sessionStorage.clear()
+  //       navigate("/auth/login");
+  // }
+
   function handleLogout() {
-    // handle logout
-    // dispatch(logoutUser()).then((data) => {
-    //   if (data?.payload?.success) {
-    //     toast({
-    //       title: data?.payload?.message,
-    //     });
-    //     navigate("/auth/login");
-    //   }
-    // }
-     dispatch(resetTokenAndCredentials()).then(() => {
-          toast({
-            title: "Logged out successfully",
-            className: "bg-white",
-          });
-        });
-        sessionStorage.clear()
-        navigate("/auth/login");
-  }
+  dispatch(resetTokenAndCredentials());
+
+  sessionStorage.removeItem("token");
+
+  toast({
+    title: "Logged out successfully",
+    className: "bg-white",
+  });
+
+  navigate("/auth/login");
+}
 
   
   return (
