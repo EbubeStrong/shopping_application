@@ -1,14 +1,32 @@
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
 
-// register
+// Use an environment variable for your JWT secret
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// Check JWT configuration
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not configured");
+}
+
+// Register
 const registerUser = async (req, res) => {
-  const { userName, email, password } = req.body;
+  const { userName, email, password } = req.body || {};
 
   try {
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    if (!userName || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Username, email and password are required.",
+      });
+    }
+
+    const existingUser = await User.findOne({
+      email: email.trim().toLowerCase(),
+    });
+
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -16,26 +34,27 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // Hash password and create new user
     const hashPassword = await bcrypt.hash(password, 12);
+
     const newUser = new User({
       userName,
-      email,
+      email: email.trim().toLowerCase(),
       password: hashPassword,
     });
 
     await newUser.save();
 
-    
-        // Generate JWT token
     const token = jwt.sign(
-      { id: newUser._id, email: newUser.email, role: "user" }, 
-      "CLIENT_SECRET_KEY",
+      {
+        id: newUser._id,
+        email: newUser.email,
+        role: newUser.role || "user",
+      },
+      JWT_SECRET,
       { expiresIn: "60m" }
     );
 
-    // Send token in HTTP-only cookie
-    res.cookie("token", token, { httpOnly: true, secure: true }).json({
+    return res.status(201).json({
       success: true,
       message: "Registration Successful",
       user: {
@@ -43,68 +62,64 @@ const registerUser = async (req, res) => {
         userName: newUser.userName,
         email: newUser.email,
       },
-      token
+      token,
     });
-
   } catch (e) {
     console.error("Error in registerUser:", e);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "Some error occurred",
+      message: "Failed to register user. Please try again later.",
     });
   }
 };
 
-
-
-// login
+// Login
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body || {};
 
   try {
-    // Check if the user exists
-    const checkUser = await User.findOne({ email });
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required.",
+      });
+    }
+
+    const checkUser = await User.findOne({
+      email: email.trim().toLowerCase(),
+    });
+
     if (!checkUser) {
-      return res.json({
+      return res.status(401).json({
         success: false,
-        message: "User not found! Please sign up first.",
+        message: "Invalid email or password.",
       });
     }
 
-    // Compare password with the hashed password
-    const checkPasswordMatch = await bcrypt.compare(password, checkUser.password);
+    const checkPasswordMatch = await bcrypt.compare(
+      password,
+      checkUser.password
+    );
+
     if (!checkPasswordMatch) {
-      return res.json({
+      return res.status(401).json({
         success: false,
-        message: "Incorrect password! Please try again.",
+        message: "Invalid email or password.",
       });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       {
         id: checkUser._id,
-        role: checkUser.role,
+        role: checkUser.role || "user",
         email: checkUser.email,
         userName: checkUser.userName,
       },
-      "CLIENT_SECRET_KEY",
+      JWT_SECRET,
       { expiresIn: "60m" }
     );
 
-    // Send token as HTTP-only cookie
-    // res.cookie("token", token, { httpOnly: true, secure: false }).json({
-    //   success: true,
-    //   message: "Logged in successfully",
-    //   user: {
-    //     email: checkUser.email,
-    //     role: checkUser.role,
-    //     id: checkUser._id,
-    //     userName: checkUser.userName,
-    //   },
-    // });
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Logged in successfully",
       token,
@@ -115,58 +130,61 @@ const loginUser = async (req, res) => {
         userName: checkUser.userName,
       },
     });
-
-    // console.log("Response User:", {
-    //   email: checkUser.email,
-    //   role: checkUser.role,
-    //   id: checkUser._id,
-    //   userName: checkUser.userName, //  Debugging log
-    // });
-
-
   } catch (e) {
-    console.error(e);
-    res.status(500).json({
+    console.error("Error in loginUser:", e);
+    return res.status(500).json({
       success: false,
       message: "An error occurred while logging in.",
     });
   }
 };
 
-
-// logout
+// Logout
 const logoutUser = (req, res) => {
-  res.clearCookie("token").json({
+  return res.status(200).json({
     success: true,
     message: "Logged out successfully",
   });
-}
+};
 
-// auth middleware
-const authMiddleware = async (req, res, next) => {
-  try {
-    // const token = req.cookies.token;
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized user!",
-      });
-    }
+// Authentication middleware
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-    const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
-    req.user = decoded;
-    next();
-  } catch (e) {
-    console.error(e);
-    res.status(401).json({
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
       success: false,
-      message: "Unauthorised User!",
+      message: "Authentication token missing or invalid.",
+    });
+  }
+
+  const token = authHeader.slice(7).trim();
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "Authentication token missing.",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    return next();
+  } catch (e) {
+    return res.status(401).json({
+      success: false,
+      message:
+        e.name === "TokenExpiredError"
+          ? "Your session has expired. Please log in again."
+          : "Invalid authentication token.",
     });
   }
 };
 
-
-module.exports = {registerUser, loginUser, logoutUser, authMiddleware}
-
+module.exports = {
+  registerUser,
+  loginUser,
+  logoutUser,
+  authMiddleware,
+};
